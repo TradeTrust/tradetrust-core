@@ -31,5 +31,8 @@
   },
   "dependencies": {
     "@vitest/coverage-v8": "^1.2.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
