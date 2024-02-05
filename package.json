@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "test": "vitest --run",
+    "test:ci": "vitest --run --coverage",
     "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:type",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
     "build:esm": "tsc --module es2015 --outDir dist/esm",
@@ -27,5 +28,8 @@
     "prettier": "^3.2.4",
     "typescript": "^5.3.3",
     "vitest": "^1.2.2"
+  },
+  "dependencies": {
+    "@vitest/coverage-v8": "^1.2.2"
   }
 }
