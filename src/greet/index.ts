@@ -3,5 +3,5 @@ export type Person = {
 }
 
 export const greet = (person: Person) => {
-    return `hello ${person.name}`
+    return `hello ${person.name}! good day`
 }
