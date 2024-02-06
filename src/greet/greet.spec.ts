@@ -3,7 +3,7 @@ import { greet } from '.'
 
 describe('Greet', () => {
     const testPerson = { name: 'john' }
-    it('should return the greet string for person', () => {
+    it('should return the greet string for person ', () => {
         expect(greet(testPerson)).equal('hello john!')
     })
 })
