@@ -37,6 +37,8 @@
     "url": "https://github.com/TradeTrust/tradetrust-core.git"
   },
   "dependencies": {
+    "@tradetrust-tt/tradetrust-utils": "^1.9.1",
+    "@tradetrust-tt/tt-verify": "^8.4.0",
     "@vitest/coverage-v8": "^1.2.2"
   },
   "publishConfig": {
