@@ -2,6 +2,7 @@ import {
     verificationBuilder as originalVerificationBuilder,
     openAttestationVerifiers,
     openAttestationDidIdentityProof,
+    isValid,
 } from '@tradetrust-tt/tt-verify'
 import {
     DocumentsToVerify,
@@ -12,6 +13,7 @@ import { interpretFragments } from '@tradetrust-tt/tradetrust-utils'
 const verificationBuilder = (builderOptions: VerificationBuilderOptions) => {
     return originalVerificationBuilder(
         [...openAttestationVerifiers, openAttestationDidIdentityProof],
+        // [...openAttestationVerifiers],
         builderOptions
     )
 }
@@ -23,4 +25,4 @@ const verify = (
     return verificationBuilder(builderOptions)(document)
 }
 
-export { verificationBuilder, verify, interpretFragments }
+export { verificationBuilder, verify, interpretFragments, isValid }
