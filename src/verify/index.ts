@@ -13,7 +13,6 @@ import { interpretFragments } from '@tradetrust-tt/tradetrust-utils'
 const verificationBuilder = (builderOptions: VerificationBuilderOptions) => {
     return originalVerificationBuilder(
         [...openAttestationVerifiers, openAttestationDidIdentityProof],
-        // [...openAttestationVerifiers],
         builderOptions
     )
 }

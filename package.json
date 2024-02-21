@@ -11,6 +11,8 @@
   "scripts": {
     "test:prep:blockchain": "ganache --wallet.mnemonic \"indicate swing place chair flight used hammer soon photo region volume shuffle\" -i 1337",
     "test:prep:contracts": "node test/prep/setup-contracts.mjs",
+    "test:prep": "run-s test:prep:contracts test",
+    "test:concurrently": "run-p test:prep:blockchain test:prep",
     "test": "vitest --run",
     "test:ci": "vitest --run --coverage",
     "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:type",
@@ -25,8 +27,8 @@
   "license": "ISC",
   "devDependencies": {
     "@commitlint/config-conventional": "^16.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.20.0",
-    "@typescript-eslint/parser": "^6.20.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.56.0",

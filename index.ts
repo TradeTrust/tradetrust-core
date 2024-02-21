@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import { verify } from './src/verify'
-import { dnsTxtDocStore } from './test/fixtures/v2/wrapped/dns-txt-doc-store'
+import { dnsTxtDocStore } from './test/fixtures/v2/dns-txt-doc-store'
 import util from 'util'
 // verify(documentGoerliValidWithToken, { network: 'goerli' }).then((err) =>
 //     console.log(err)

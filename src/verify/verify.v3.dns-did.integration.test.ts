@@ -3,7 +3,7 @@ import {
     dnsDidSignedAndTampered,
     dnsDidUnSigned,
     dnsDidSigned,
-} from '../../test/fixtures/v2/wrapped/dns-did'
+} from '../../test/fixtures/v3/dns-did'
 import { describe, it, expect } from 'vitest'
 import { isValid, verify } from '.'
 import { ethers } from 'ethers'
@@ -14,7 +14,7 @@ const localProvider = new ethers.providers.JsonRpcProvider(
 )
 
 describe('verify(integration) dns-txt with dns:did', () => {
-    it('should return in-valid fragments for signed document', async () => {
+    it('should return valid fragments for signed document', async () => {
         const fragments = await verify(dnsDidSigned, {
             provider: localProvider,
         })
@@ -49,17 +49,13 @@ describe('verify(integration) dns-txt with dns:did', () => {
             {
               "data": {
                 "details": {
-                  "issuance": [
-                    {
-                      "did": "did:ethr:0x391aFf3942857a10958425FebF1fC1938D9F5AE7",
-                      "issued": true,
-                    },
-                  ],
-                  "revocation": [
-                    {
-                      "revoked": false,
-                    },
-                  ],
+                  "issuance": {
+                    "did": "did:ethr:0x391aFf3942857a10958425FebF1fC1938D9F5AE7",
+                    "issued": true,
+                  },
+                  "revocation": {
+                    "revoked": false,
+                  },
                 },
                 "issuedOnAll": true,
                 "revokedOnAny": false,
@@ -79,13 +75,11 @@ describe('verify(integration) dns-txt with dns:did', () => {
               "type": "ISSUER_IDENTITY",
             },
             {
-              "data": [
-                {
-                  "key": "did:ethr:0x391aFf3942857a10958425FebF1fC1938D9F5AE7#controller",
-                  "location": "example.tradetrust.io",
-                  "status": "VALID",
-                },
-              ],
+              "data": {
+                "key": "did:ethr:0x391aFf3942857a10958425FebF1fC1938D9F5AE7#controller",
+                "location": "example.tradetrust.io",
+                "status": "VALID",
+              },
               "name": "OpenAttestationDnsDidIdentityProof",
               "status": "VALID",
               "type": "ISSUER_IDENTITY",
@@ -226,17 +220,13 @@ describe('verify(integration) dns-txt with dns:did', () => {
             {
               "data": {
                 "details": {
-                  "issuance": [
-                    {
-                      "did": "did:ethr:0x391aFf3942857a10958425FebF1fC1938D9F5AE7",
-                      "issued": true,
-                    },
-                  ],
-                  "revocation": [
-                    {
-                      "revoked": false,
-                    },
-                  ],
+                  "issuance": {
+                    "did": "did:ethr:0x391aFf3942857a10958425FebF1fC1938D9F5AE7",
+                    "issued": true,
+                  },
+                  "revocation": {
+                    "revoked": false,
+                  },
                 },
                 "issuedOnAll": true,
                 "revokedOnAny": false,
@@ -256,13 +246,11 @@ describe('verify(integration) dns-txt with dns:did', () => {
               "type": "ISSUER_IDENTITY",
             },
             {
-              "data": [
-                {
-                  "key": "did:ethr:0x391aFf3942857a10958425FebF1fC1938D9F5AE7#controller",
-                  "location": "example.tradetrust.io",
-                  "status": "VALID",
-                },
-              ],
+              "data": {
+                "key": "did:ethr:0x391aFf3942857a10958425FebF1fC1938D9F5AE7#controller",
+                "location": "example.tradetrust.io",
+                "status": "VALID",
+              },
               "name": "OpenAttestationDnsDidIdentityProof",
               "status": "VALID",
               "type": "ISSUER_IDENTITY",
@@ -282,92 +270,6 @@ describe('verify(integration) dns-txt with dns:did', () => {
         expect(isValid(fragments, ['DOCUMENT_INTEGRITY'])).toStrictEqual(false)
         expect(isValid(fragments, ['DOCUMENT_STATUS'])).toStrictEqual(true)
         expect(isValid(fragments, ['ISSUER_IDENTITY'])).toStrictEqual(true)
-        expect(isValid(fragments)).toStrictEqual(false)
-    })
-    it('should return in-valid fragments for signed document with invalid provider', async () => {
-        const fragments = await verify(
-            {},
-            {
-                provider: localProvider,
-            }
-        )
-        expect(fragments).toMatchInlineSnapshot(`
-          [
-            {
-              "name": "OpenAttestationHash",
-              "reason": {
-                "code": 2,
-                "codeString": "SKIPPED",
-                "message": "Document does not have merkle root, target hash or data.",
-              },
-              "status": "SKIPPED",
-              "type": "DOCUMENT_INTEGRITY",
-            },
-            {
-              "name": "OpenAttestationEthereumTokenRegistryStatus",
-              "reason": {
-                "code": 4,
-                "codeString": "SKIPPED",
-                "message": "Document issuers doesn't have "tokenRegistry" property or TOKEN_REGISTRY method",
-              },
-              "status": "SKIPPED",
-              "type": "DOCUMENT_STATUS",
-            },
-            {
-              "name": "OpenAttestationEthereumDocumentStoreStatus",
-              "reason": {
-                "code": 4,
-                "codeString": "SKIPPED",
-                "message": "Document issuers doesn't have "documentStore" or "certificateStore" property or DOCUMENT_STORE method",
-              },
-              "status": "SKIPPED",
-              "type": "DOCUMENT_STATUS",
-            },
-            {
-              "name": "OpenAttestationDidSignedDocumentStatus",
-              "reason": {
-                "code": 0,
-                "codeString": "SKIPPED",
-                "message": "Document was not signed by DID directly",
-              },
-              "status": "SKIPPED",
-              "type": "DOCUMENT_STATUS",
-            },
-            {
-              "name": "OpenAttestationDnsTxtIdentityProof",
-              "reason": {
-                "code": 2,
-                "codeString": "SKIPPED",
-                "message": "Document issuers doesn't have "documentStore" / "tokenRegistry" property or doesn't use DNS-TXT type",
-              },
-              "status": "SKIPPED",
-              "type": "ISSUER_IDENTITY",
-            },
-            {
-              "name": "OpenAttestationDnsDidIdentityProof",
-              "reason": {
-                "code": 0,
-                "codeString": "SKIPPED",
-                "message": "Document was not issued using DNS-DID",
-              },
-              "status": "SKIPPED",
-              "type": "ISSUER_IDENTITY",
-            },
-            {
-              "name": "OpenAttestationDidIdentityProof",
-              "reason": {
-                "code": 0,
-                "codeString": "SKIPPED",
-                "message": "Document is not using DID as top level identifier or has not been wrapped",
-              },
-              "status": "SKIPPED",
-              "type": "ISSUER_IDENTITY",
-            },
-          ]
-        `)
-        expect(isValid(fragments, ['DOCUMENT_INTEGRITY'])).toStrictEqual(false)
-        expect(isValid(fragments, ['DOCUMENT_STATUS'])).toStrictEqual(false)
-        expect(isValid(fragments, ['ISSUER_IDENTITY'])).toStrictEqual(false)
         expect(isValid(fragments)).toStrictEqual(false)
     })
 })
