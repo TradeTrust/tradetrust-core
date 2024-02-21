@@ -4,9 +4,9 @@ import {
     dnsTxtTokenRegTampered,
     dnsTxtTokenRegIncorrectDNS,
     dnsTxtTokenRegIncorrectTokenReg,
-} from '../../test/fixtures/v3/dns-txt-token-reg'
+} from '../../test/fixtures/verify/v3/dns-txt-token-reg'
 import { describe, it, expect } from 'vitest'
-import { verify, isValid } from '.'
+import { verify, isValid } from './verify'
 import { ethers } from 'ethers'
 
 const localProvider = new ethers.providers.JsonRpcProvider(

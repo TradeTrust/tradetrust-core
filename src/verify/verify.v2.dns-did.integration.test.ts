@@ -2,9 +2,9 @@ import {
     dnsDidSignedAndTampered,
     dnsDidUnSigned,
     dnsDidSigned,
-} from '../../test/fixtures/v2/dns-did'
+} from '../../test/fixtures/verify/v2/dns-did'
 import { describe, it, expect } from 'vitest'
-import { isValid, verify } from '.'
+import { isValid, verify } from './verify'
 import { ethers } from 'ethers'
 import { v3 } from '@tradetrust-tt/tradetrust'
 

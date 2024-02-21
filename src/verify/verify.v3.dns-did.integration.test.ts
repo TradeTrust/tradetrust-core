@@ -2,9 +2,9 @@ import {
     dnsDidSignedAndTampered,
     dnsDidUnSigned,
     dnsDidSigned,
-} from '../../test/fixtures/v3/dns-did'
+} from '../../test/fixtures/verify/v3/dns-did'
 import { describe, it, expect } from 'vitest'
-import { isValid, verify } from '.'
+import { isValid, verify } from './verify'
 import { ethers } from 'ethers'
 
 const localProvider = new ethers.providers.JsonRpcProvider(

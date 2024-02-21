@@ -13,7 +13,7 @@
     "test:prep:contracts": "node test/prep/setup-contracts.mjs",
     "test:prep": "run-s test:prep:contracts test",
     "test:concurrently": "run-p test:prep:blockchain test:prep",
-    "test": "vitest --run",
+    "test": "npx vitest --reporter=basic",
     "test:ci": "vitest --run --coverage",
     "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:type",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
@@ -58,5 +58,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }

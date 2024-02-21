@@ -1,1 +1,2 @@
-export * from './verify'
+export * from './verify/verify'
+export * from './utils'
