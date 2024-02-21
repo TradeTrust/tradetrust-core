@@ -1,14 +1,6 @@
-import { SchemaId, WrappedDocument, v2 } from '@tradetrust-tt/tradetrust'
+import { SchemaId, v3 } from '@tradetrust-tt/tradetrust'
 
-interface CustomDocument extends v2.OpenAttestationDocument {
-    recipient: {
-        name: string
-    }
-}
-
-interface CustomDocumentObfuscated extends v2.OpenAttestationDocument {}
-
-export const dnsTxtDocStore: WrappedDocument<CustomDocument> = {
+export const dnsTxtDocStore = {
     version: SchemaId.v3,
     '@context': [
         'https://www.w3.org/2018/credentials/v1',
@@ -79,9 +71,9 @@ export const dnsTxtDocStore: WrappedDocument<CustomDocument> = {
             obfuscated: [],
         },
     },
-}
+} as v3.WrappedDocument
 
-export const dnsTxtDocStoreTampered: WrappedDocument<CustomDocument> = {
+export const dnsTxtDocStoreTampered = {
     version: SchemaId.v3,
     '@context': [
         'https://www.w3.org/2018/credentials/v1',
@@ -152,9 +144,9 @@ export const dnsTxtDocStoreTampered: WrappedDocument<CustomDocument> = {
             obfuscated: [],
         },
     },
-}
+} as v3.WrappedDocument
 
-export const dnsTxtDocStoreRevoked: WrappedDocument<CustomDocument> = {
+export const dnsTxtDocStoreRevoked = {
     version: SchemaId.v3,
     '@context': [
         'https://www.w3.org/2018/credentials/v1',
@@ -225,10 +217,10 @@ export const dnsTxtDocStoreRevoked: WrappedDocument<CustomDocument> = {
             obfuscated: [],
         },
     },
-}
+} as v3.WrappedDocument
 
-export const dnsTxtDocStoreIncorrectDNS: WrappedDocument<CustomDocument> = {
-    version: 'https://schema.openattestation.com/3.0/schema.json',
+export const dnsTxtDocStoreIncorrectDNS = {
+    version: SchemaId.v3,
     '@context': [
         'https://www.w3.org/2018/credentials/v1',
         'https://schemata.openattestation.com/com/openattestation/1.0/DrivingLicenceCredential.json',
@@ -298,115 +290,150 @@ export const dnsTxtDocStoreIncorrectDNS: WrappedDocument<CustomDocument> = {
             obfuscated: [],
         },
     },
-}
+} as v3.WrappedDocument
 
-export const dnsTxtDocStoreObfuscated: WrappedDocument<CustomDocumentObfuscated> =
-    {
-        version: SchemaId.v2,
-        data: {
-            $template: {
-                name: '456f5ada-b199-4012-b359-ad689d3a5df6:string:main',
-                type: 'a8b58b42-cd8c-4da5-ad83-fc0a71e342d0:string:EMBEDDED_RENDERER',
-                url: '92c32eb4-5119-4707-8c43-a4a4411d62ca:string:https://tutorial-renderer.openattestation.com',
-            },
-            issuers: [
-                {
-                    name: 'ea308a68-db59-422f-8da3-a37788f0fcd1:string:Demo Issuer',
-                    documentStore:
-                        'af1be992-cf0e-477d-b5f2-a847c12289dd:string:0x4Bf7E4777a8D1b6EdD5F2d9b8582e2817F0B0953',
-                    identityProof: {
-                        type: '5947b4b6-0d4e-4bef-9d50-5aee88f3783b:string:DNS-TXT',
-                        location:
-                            '5e0eba02-56ae-46a1-9c99-4008578cbe96:string:example.tradetrust.io',
-                    },
-                },
-            ],
-        },
-        signature: {
-            type: 'SHA3MerkleProof',
-            targetHash:
-                '56a72ab0a30bef3d6fb767d16f66a854a21624739a773b590a2381d68eea9468',
-            proof: [],
-            merkleRoot:
-                '56a72ab0a30bef3d6fb767d16f66a854a21624739a773b590a2381d68eea9468',
-        },
-        privacy: {
-            obfuscatedData: [
-                '8c5c965edb2e14df766ad1e77822428d2cbf2d2d761f7c36a5801deaa971fe83',
-            ],
-        },
-    }
-
-export const dnsTxtDocStoreIncorrectDocumentStore: WrappedDocument<CustomDocument> =
-    {
-        version: SchemaId.v3,
-        '@context': [
-            'https://www.w3.org/2018/credentials/v1',
-            'https://schemata.openattestation.com/com/openattestation/1.0/DrivingLicenceCredential.json',
-            'https://schemata.openattestation.com/com/openattestation/1.0/OpenAttestation.v3.json',
-            'https://schemata.openattestation.com/com/openattestation/1.0/CustomContext.json',
-        ],
-        reference: 'SERIAL_NUMBER_123',
-        name: 'Republic of Singapore Driving Licence',
-        issuanceDate: '2010-01-01T19:23:24Z',
-        validFrom: '2010-01-01T19:23:24Z',
-        issuer: {
-            id: 'https://example.com',
-            type: 'OpenAttestationIssuer',
-            name: 'DEMO STORE',
-        },
-        type: [
-            'VerifiableCredential',
-            'DrivingLicenceCredential',
-            'OpenAttestationCredential',
-        ],
-        credentialSubject: {
-            id: 'did:example:SERIAL_NUMBER_123',
-            class: [
-                {
-                    type: '3',
-                    effectiveDate: '2010-01-01T19:23:24Z',
-                },
-                {
-                    type: '3A',
-                    effectiveDate: '2010-01-01T19:23:24Z',
-                },
-            ],
-        },
-        openAttestationMetadata: {
-            template: {
-                name: 'CUSTOM_TEMPLATE',
-                type: 'EMBEDDED_RENDERER',
-                url: 'https://localhost:3000/renderer',
-            },
-            proof: {
-                type: 'OpenAttestationProofMethod',
-                method: 'DOCUMENT_STORE',
-                value: '0x99f7E4777a8D1b6EdD5F2d9b8582e2817F0B0953',
-            },
-            identityProof: {
-                type: 'DNS-TXT',
-                identifier: 'example.tradetrust.io',
-            },
-        },
-        attachments: [
+export const dnsTxtDocStoreObfuscated = {
+    version: SchemaId.v3,
+    '@context': [
+        'https://www.w3.org/2018/credentials/v1',
+        'https://schemata.openattestation.com/com/openattestation/1.0/DrivingLicenceCredential.json',
+        'https://schemata.openattestation.com/com/openattestation/1.0/OpenAttestation.v3.json',
+        'https://schemata.openattestation.com/com/openattestation/1.0/CustomContext.json',
+    ],
+    reference: 'SERIAL_NUMBER_123',
+    name: 'Republic of Singapore Driving Licence',
+    issuanceDate: '2010-01-01T19:23:24Z',
+    validFrom: '2010-01-01T19:23:24Z',
+    issuer: {
+        id: 'https://example.com',
+        type: 'OpenAttestationIssuer',
+        name: 'DEMO STORE',
+    },
+    type: [
+        'VerifiableCredential',
+        'DrivingLicenceCredential',
+        'OpenAttestationCredential',
+    ],
+    credentialSubject: {
+        id: 'did:example:SERIAL_NUMBER_123',
+        class: [
             {
-                fileName: 'sample.pdf',
-                mimeType: 'application/pdf',
-                data: 'BASE64_ENCODED_FILE',
+                type: '3',
+                effectiveDate: '2010-01-01T19:23:24Z',
+            },
+            {
+                type: '3A',
+                effectiveDate: '2010-01-01T19:23:24Z',
             },
         ],
-        proof: {
-            type: 'OpenAttestationMerkleProofSignature2018',
-            proofPurpose: 'assertionMethod',
-            targetHash:
-                'f039e1328ad4a21e7d58d6dab1caea228238bee71080b1364bb6f1097c39b407',
-            proofs: [],
-            merkleRoot:
-                'f039e1328ad4a21e7d58d6dab1caea228238bee71080b1364bb6f1097c39b407',
-            salts: 'W3sidmFsdWUiOiJhODAzNGZlOTA0MjNmMDAwMDdlMGMxNzA5MTg0ZjY2NWI0NDcwZTEwNDk0OGFiMzhlOTkzNGNlNTkwOWYwZmQ2IiwicGF0aCI6InZlcnNpb24ifSx7InZhbHVlIjoiMGY4N2IzMDcwZGU1YzY5YTU4OTgzMmQ2NDFlZTc1OWE1MzBiMGM3MWU2ZDQ1NzExY2YxZTVlNzUzNGZiMDA0ZiIsInBhdGgiOiJAY29udGV4dFswXSJ9LHsidmFsdWUiOiIwZDI4NTAyNjE5ZmViZTQ5NTc4YTViNmEzN2JlYzk1MTU3OWVmY2FhYmUwM2ViZjY0YmY1YzkzYTZiNmM1ZTNkIiwicGF0aCI6IkBjb250ZXh0WzFdIn0seyJ2YWx1ZSI6Ijg1OTFmZGQwMTdmOGMwMTQyNGIxYTkzOTAxZjAzNjdiNDRjYmU3ODljNzRjYTk4YzFhZjAwMzNlODc3MmExOWQiLCJwYXRoIjoiQGNvbnRleHRbMl0ifSx7InZhbHVlIjoiOGRjZjc4ZDQyZDNmMTQ4YzY1NThiZWM4ODZjNDIzZmJhODg0YThmN2NhOGFjZWRkMmY5YjViMGJhN2E3M2JiYSIsInBhdGgiOiJAY29udGV4dFszXSJ9LHsidmFsdWUiOiIzMjI1YjZlZWE1M2VhZGNhNmEzZGZhZmNlOTAyYmEyNjk4M2JmMDRjOWFmY2UwMDhhNzkxM2FiNTRmZWY1ODIwIiwicGF0aCI6InJlZmVyZW5jZSJ9LHsidmFsdWUiOiJjNGUyYWQ4Mzk1YWUxNmExMzdhMTEyNjcxN2YyNDU0ZmY2N2E5ZmFhYzY1MWJjODliMTYxZWY1NTlmYjQ5NzZlIiwicGF0aCI6Im5hbWUifSx7InZhbHVlIjoiNDRlOGZhOTEzNGVhZGRlZjE3OTRiMTE2ZDViMmM5OTE5ODdiZTYyMjA5Yjk0MjgyYzdiYjJiNTI4Zjk0Y2I3NiIsInBhdGgiOiJpc3N1YW5jZURhdGUifSx7InZhbHVlIjoiNGZiMjIxM2FmNzEwOGZjNzNlMGZlMDkwZmVmZWE2YWE2ZGNmNWJlN2ZlNWQ2YzJlMjQ3NTgzNzcyY2RmMzgxYSIsInBhdGgiOiJ2YWxpZEZyb20ifSx7InZhbHVlIjoiNmQ5OGUxZWJmNDRlYjdkNDUyZTk1YjY2NzAxNzY3YjYyMjU0NTIwNDlmNDNjMjJhMjhkY2YwYjA0Y2JhNGE1ZiIsInBhdGgiOiJpc3N1ZXIuaWQifSx7InZhbHVlIjoiMDAxMDIzYTJlNDkwYTNhYzdhYzAyOTNiNjJhZmRhNTNlYzJjNmRiMDRmZDVkODVjMWU0OWY0MzVmNjNjNTQ2NiIsInBhdGgiOiJpc3N1ZXIudHlwZSJ9LHsidmFsdWUiOiI4MWVkODJjYWRhOThjY2NjZDJjZDgyNzFlZTg5NzRlNmUyNWRmMDlkYzdhMzg0MGJhOWQxY2NjYWVhZDIzZDA4IiwicGF0aCI6Imlzc3Vlci5uYW1lIn0seyJ2YWx1ZSI6IjA5NjlhMjIwYTUyZDVhZDA3YjZmZjFlYTBhMzY2NzY1OTQ1NGEyYjRmOTJmN2JiNTgwYjg1MmYwZWIyMGE3M2MiLCJwYXRoIjoidHlwZVswXSJ9LHsidmFsdWUiOiJhZDU3YThjYmNhZGI4N2IyMDQxNzM0YjRjNDU4ODVmMDhhNWFmZTc5YTIyNTQ1NjlhOTNjMWM1Yjc4ZGRlYzk2IiwicGF0aCI6InR5cGVbMV0ifSx7InZhbHVlIjoiZjY0ODM4MDVmODE5NThkNWViYjk0ZDM5MTk3MjAzODVlODUyMmFmN2JmNmE1NGRjZDU1YTJmZmFjMjdlN2ViZSIsInBhdGgiOiJ0eXBlWzJdIn0seyJ2YWx1ZSI6IjRlNDA0NGIyYWQ1YmZmZGI1OWIyMWUyZWM1MWEzMzNhN2QwMGRiMTNjOTY2ODc2ZGZhZTM2ODI5N2EzZDk1NmQiLCJwYXRoIjoiY3JlZGVudGlhbFN1YmplY3QuaWQifSx7InZhbHVlIjoiMTQzZjkzYWEwMzFmZTUwNzI3NGE2ODEyZGZmZDkzOTIxMWE5YWRhZjRjNGUzMzBhOGYzN2RmNmE1M2E1NmY0ZCIsInBhdGgiOiJjcmVkZW50aWFsU3ViamVjdC5jbGFzc1swXS50eXBlIn0seyJ2YWx1ZSI6ImViMjFjYWI2NDU5MTdlOWQ4MGYzOWQwNmNkYzdjZDE2ZTRiYmRjZTk4ZmFmZTRlM2FiYTY2NmQwZTE5Zjc3NzAiLCJwYXRoIjoiY3JlZGVudGlhbFN1YmplY3QuY2xhc3NbMF0uZWZmZWN0aXZlRGF0ZSJ9LHsidmFsdWUiOiJjZGJlYzlmMjE1YjNlM2YwNzNhNGQyY2Q0NGIyODJkZDY2MjVjZDgzMGFkZGY2NTQ1MWM5ZWQ0YjQ3MjEzMmE0IiwicGF0aCI6ImNyZWRlbnRpYWxTdWJqZWN0LmNsYXNzWzFdLnR5cGUifSx7InZhbHVlIjoiYzdiYzdiNGIxYWM1OGQ0MThiZmNkMDZiOTdjN2Y3Yzk4MjFlMjkxYWJlNmFiYzVhNWNiMmYzZDIzNzdiMDNjZSIsInBhdGgiOiJjcmVkZW50aWFsU3ViamVjdC5jbGFzc1sxXS5lZmZlY3RpdmVEYXRlIn0seyJ2YWx1ZSI6ImE1ZGIwNWZiZGIxMmQ5ZTdlNTUwMWJmYTdlOGE0NTg4OGJjYWI4YTIxNTQ0YjE1NzUzMjIyZDhjNWY5MWJkZTQiLCJwYXRoIjoib3BlbkF0dGVzdGF0aW9uTWV0YWRhdGEudGVtcGxhdGUubmFtZSJ9LHsidmFsdWUiOiI4MjE4YjkwNDJhNjhiNjhiZTU3YmQ4MWY3ODc5MzdjZWM3MDVhNDcxMDllYTU4NjVlMjMwN2E0MmY3ZThjY2IzIiwicGF0aCI6Im9wZW5BdHRlc3RhdGlvbk1ldGFkYXRhLnRlbXBsYXRlLnR5cGUifSx7InZhbHVlIjoiNDFlMjQyMGU0NThhNGRjOGM2ZGM2YzczZDllYTlmMGVhMjVmZTQ1YzY5OTliMWZjZjEyNTI1M2EyYzhjNTY1OSIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS50ZW1wbGF0ZS51cmwifSx7InZhbHVlIjoiZmNhNGQwNzA3NDEzZDM2ZjhjM2ZmMDVkOTIzMTNhMmEwYmIxNGU5Y2IzNjk3ODQwNTljNTNjZTVlYzJiN2QzMiIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS5wcm9vZi50eXBlIn0seyJ2YWx1ZSI6ImE4MzM4OTM1YjRiOWZmNDc1NmE0NjJjMjZmNmY4ZTYzYmVjY2VlNzlhYjIwYTk3MDlkMTY4N2Q3MjBmNWY4YTQiLCJwYXRoIjoib3BlbkF0dGVzdGF0aW9uTWV0YWRhdGEucHJvb2YubWV0aG9kIn0seyJ2YWx1ZSI6Ijk5NGUxODNiNjdkZDhkZjBkZTVlN2RiMTdiNzI4MTJlNzQ0OWMyZjA5MjYzNmZlNGI0M2ZmYjIzMTM0YjhkNDgiLCJwYXRoIjoib3BlbkF0dGVzdGF0aW9uTWV0YWRhdGEucHJvb2YudmFsdWUifSx7InZhbHVlIjoiODE4MTJkNDgxNGFjMDJlYjZjOWNiMDBjOTZiOTE4MTlhMTgxZGE1MGVmYWZmYTY0N2YyMzlmNDQ5NmFmZTU2MiIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS5pZGVudGl0eVByb29mLnR5cGUifSx7InZhbHVlIjoiN2M2YTNkZTNlNjdmNGNiMWNjMGRhYzlmZDczYzdmYzFmMzM3NDlmMWM3YTZiM2E1YmQzOWNkZDdhOWZlMTQ4MSIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS5pZGVudGl0eVByb29mLmlkZW50aWZpZXIifSx7InZhbHVlIjoiOTI1NzUxNDNmMmI2NzhkZjRmYmY3MjAzZTY4MzkxOGUwNGFlODgwYTk1ZTc2MGU4ZmExMDBlNzU2YzEwNWMwMSIsInBhdGgiOiJhdHRhY2htZW50c1swXS5maWxlTmFtZSJ9LHsidmFsdWUiOiJlMmVhYzE4YjFkNTY2NTU2Yjk2MmE4N2ViMmNlM2NmOWJmNmMwNDE1NzExOTJhOGZjN2Q5OWZhMmE4M2VjYTViIiwicGF0aCI6ImF0dGFjaG1lbnRzWzBdLm1pbWVUeXBlIn0seyJ2YWx1ZSI6Ijk4Zjk1MWM5NThlYmRiNmYzZWMyN2VkMDg1NDE0ZGIzZjhhZWFhM2M0Zjk0M2FmNzBhZDY5ZDE1ZmQxMTNmMDAiLCJwYXRoIjoiYXR0YWNobWVudHNbMF0uZGF0YSJ9XQ==',
-            privacy: {
-                obfuscated: [],
-            },
+    },
+    openAttestationMetadata: {
+        template: {
+            name: 'CUSTOM_TEMPLATE',
+            type: 'EMBEDDED_RENDERER',
+            url: 'https://localhost:3000/renderer',
         },
-    }
+        proof: {
+            type: 'OpenAttestationProofMethod',
+            method: 'DOCUMENT_STORE',
+            value: '0x4Bf7E4777a8D1b6EdD5F2d9b8582e2817F0B0953',
+        },
+        identityProof: {
+            type: 'DNS-TXT',
+            identifier: 'example.tradetrust.io',
+        },
+    },
+    attachments: [
+        {
+            fileName: 'sample.pdf',
+            mimeType: 'application/pdf',
+            data: 'BASE64_ENCODED_FILE',
+        },
+    ],
+    proof: {
+        type: 'OpenAttestationMerkleProofSignature2018',
+        proofPurpose: 'assertionMethod',
+        targetHash:
+            '660e07e2defb55f04d6715448ac4f9c5718c8115c50ebd8931be15ed61ae8580',
+        proofs: [],
+        merkleRoot:
+            '660e07e2defb55f04d6715448ac4f9c5718c8115c50ebd8931be15ed61ae8580',
+        salts: 'W3sidmFsdWUiOiI0YmQ0MGZjZjliMGRjNzU3YjViMWU4MDhlNmEwMGQ3NWQ4NjZmYzg0ODYzYTA3YjRkYTllNGU4NjQ5MThiMjY3IiwicGF0aCI6InZlcnNpb24ifSx7InZhbHVlIjoiMDk4ZDk0ODZlNjZiMTQ4MDk5ZDQ2ZTI2NGQ3N2E0NjRjZDcwNjA3M2MwYTg2Yzk0NDlkNmIyMWYxYmRiZjFkZSIsInBhdGgiOiJAY29udGV4dFswXSJ9LHsidmFsdWUiOiI3OWZkMDU0YjhjYzMwM2M3NWMzZDAxN2QzNTRhYzJjOGQyNjI1YjViNTdjZjM0OGJjMDVhODMwZTUzNDQzODBjIiwicGF0aCI6IkBjb250ZXh0WzFdIn0seyJ2YWx1ZSI6IjIyNjZkNmQxZTI4YTQwNzBmNTcyMDY3YTcwNTIzZjMxOWMyYTQ4YjJlMmVjMzRhNjgwNjAzNWU5YWVhM2QzMmIiLCJwYXRoIjoiQGNvbnRleHRbMl0ifSx7InZhbHVlIjoiOTk4YTVmODU5NzMzODRlYTE4ODMzMTY2NmRjZWY0ZTMwZGIyZDFjYmNjYjk0MzNjZmM5MmIyNjdjZDM5YWM2NSIsInBhdGgiOiJAY29udGV4dFszXSJ9LHsidmFsdWUiOiIwMjg5ZDVmNjBiN2Y4MmMxMDg5MzFlYWZmNzAwYWI0YTgyMmYxYzAwMTMyMDQ1YjViYWE2YzZmYmE3NzBmYjk1IiwicGF0aCI6InJlZmVyZW5jZSJ9LHsidmFsdWUiOiI5NDU3ZGEwMjI1MTVlYWU0MjRkZGI2ZDBiNmRiZmJkN2Y1ODRhNzM1ZjQ5OGQyNzc4ODhlOTY1ZTFjMjkxYjVkIiwicGF0aCI6Im5hbWUifSx7InZhbHVlIjoiNzY1ZmY5NDA3YWM5OWI1ZDNjYmY1YzhiMWQzNWQzYzVmOThiMTdkNzdmNDcyMWM5MWE3YTY2ZDZmMzEwYWVhMCIsInBhdGgiOiJpc3N1YW5jZURhdGUifSx7InZhbHVlIjoiZjE0NDNkYjcxY2Q3YjJlYmZlMjk2NDA4NzViNjk5YWI4YjBkN2JmODEyZGM2MmZjZTQ1ZWEzMWU2MTllNzJhZiIsInBhdGgiOiJ2YWxpZEZyb20ifSx7InZhbHVlIjoiNTIyODQ5ODgxODNjODk4NzM2NTBkMTNhNGYzN2NjOWNkMmVlNjcyMDIzZmFhNzVmMzY3NTZkNjMxYjAxZmI3OSIsInBhdGgiOiJpc3N1ZXIuaWQifSx7InZhbHVlIjoiMDczMTc2YjZhNzAzNGJiZWE1YTIxNmNkMDIzOTA0NGUyYTVlNjdlMjRmY2M3MGM2ODg2YjM3YjhlY2RmMjJjMiIsInBhdGgiOiJpc3N1ZXIudHlwZSJ9LHsidmFsdWUiOiIzNTU2ODY5MjBmZTM5OGY3OThlZTk0OTcxMmU4YmQyY2Y2YmY4YmQ4OTU2M2E0ZTRlMTRlZjgzOGQwYTlhYWM1IiwicGF0aCI6Imlzc3Vlci5uYW1lIn0seyJ2YWx1ZSI6IjBhMzZiN2YwMjVmZGZmMjZmZTc1ZDlhNTFjMzdiNzhjOTU0NGMwMjQzNjAxYzEzMjJkYWFhYjVjNjA0NDdlMWUiLCJwYXRoIjoidHlwZVswXSJ9LHsidmFsdWUiOiIzMjliM2VmMDg3NjhjOTRmZDZiOTEyYWI2ZmIzOWNiMzhiN2MwODVkYjJlNGMzNWY3NzI1OGVjMzJiNTMyZGJjIiwicGF0aCI6InR5cGVbMV0ifSx7InZhbHVlIjoiYmE1M2JlN2VhZjczN2Q2ZTIwZTY0YjVjNWIwZTcwMTZiNTkwOGM0MWRhZWVmMjJmMjczMmQ4NTEzNWJiNmIwNiIsInBhdGgiOiJ0eXBlWzJdIn0seyJ2YWx1ZSI6ImU2MTc3Nzc0MWViYzljNzM2MmU2MjVhNmEwZDhiNDdkOWUzM2ZmMDk1MzQ4ZTgwYzg0ZjkzN2Q1ZjRkMjRhMmEiLCJwYXRoIjoiY3JlZGVudGlhbFN1YmplY3QuaWQifSx7InZhbHVlIjoiZWM1NGExYjM2MzExNDA1MjY0ODZhZDFkMzk5ZTZmNTA0NWM0MmI2MzUyODg5MzhhN2FjYTRjMzY3OWFmMzc1NCIsInBhdGgiOiJjcmVkZW50aWFsU3ViamVjdC5jbGFzc1swXS50eXBlIn0seyJ2YWx1ZSI6ImRkY2UzNjBjNDQwMmI0OGU1MzNmMDM4NWMxMzNlMTAzYTI2OGYyOWI2OWY2Zjc5YzUzOTQzOThiNzkyMTQ5YmMiLCJwYXRoIjoiY3JlZGVudGlhbFN1YmplY3QuY2xhc3NbMF0uZWZmZWN0aXZlRGF0ZSJ9LHsidmFsdWUiOiI2NDEzMjhkMmQzN2UzMGI0NTA5YWVkNWM0ODQwYWRlOTRjMTIzMmUxMjBkZmMxMWE0OGJmZTM3MDhmYzRjNzhiIiwicGF0aCI6ImNyZWRlbnRpYWxTdWJqZWN0LmNsYXNzWzFdLnR5cGUifSx7InZhbHVlIjoiZDk2ZDI5YjE1NjM1YzgwYmY4ZDgxYmQ0OGMzZTk3MWVjNTRmNmNjMTY4YTI3NGJjMTllY2VkYjczMTQwZDg4ZCIsInBhdGgiOiJjcmVkZW50aWFsU3ViamVjdC5jbGFzc1sxXS5lZmZlY3RpdmVEYXRlIn0seyJ2YWx1ZSI6ImIxZmZiMjQ5ZmVlYzg2N2JkZDUxOWM4YzY4NGEzMDllNWE1MDE3ZjM1Njk2NWNiNzU5MjY3MjhkYmE1MzgwMTkiLCJwYXRoIjoib3BlbkF0dGVzdGF0aW9uTWV0YWRhdGEudGVtcGxhdGUubmFtZSJ9LHsidmFsdWUiOiJkOGQyYjA4YmIxYjU2MDNkYjk2N2QxNWUwMDM4N2ZkMmIxMmQxYzk2NjFkZDAxZGVhODhiNzkzZTI5OWEyNWVhIiwicGF0aCI6Im9wZW5BdHRlc3RhdGlvbk1ldGFkYXRhLnRlbXBsYXRlLnR5cGUifSx7InZhbHVlIjoiYjkwZjdlMzIyN2ZkYjA4MWRjZTg3ZTI4MWMwNjUzYWJiNGQyYzJkMGU0NTY3ZTcxNjk2MmMwOGZhYzkwMThhZSIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS50ZW1wbGF0ZS51cmwifSx7InZhbHVlIjoiZDE5NzIxZWJkYjNlMDhlZmZlMTUyYTkyNDljYzg5NTkxZGNhNGMzMTA0MzI5NjdkYTllZjFkMmFkNDk4YjdlNiIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS5wcm9vZi50eXBlIn0seyJ2YWx1ZSI6IjI2M2FkODRjOWQ3ZTljMzRhMzY5MjYxYTEyMGNhMDdlODJhMTI0NTE3NzdmM2MyYjg2NDVjYjY4OWU3MDViYjIiLCJwYXRoIjoib3BlbkF0dGVzdGF0aW9uTWV0YWRhdGEucHJvb2YubWV0aG9kIn0seyJ2YWx1ZSI6IjgyM2E3MTRiMzdiMGJjOWE1Y2Q3ZDBlNGRjMTNmYWVhZTYxNTdiZjM5NjQ2NmE1YTA3OGIwODM4MDA4YWVmYmQiLCJwYXRoIjoib3BlbkF0dGVzdGF0aW9uTWV0YWRhdGEucHJvb2YudmFsdWUifSx7InZhbHVlIjoiY2IyZGE4NWQ2MmRlOWNmNmZmMzNkMWU2MjFkNjBkM2EzZjJlZjBiMjBhZGZjZGZjOTkxYTEzMzZhNjA3ODUxYSIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS5pZGVudGl0eVByb29mLnR5cGUifSx7InZhbHVlIjoiNmJhMzBmNjgwYTg2OTUxOTMwMGE5ZjQzNjE5M2FiODYyZDM5MzIyODkxNTFjMzc5YzFhZDQxNDk0ODVjM2Y4OSIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS5pZGVudGl0eVByb29mLmlkZW50aWZpZXIifSx7InZhbHVlIjoiYWZmM2Y3YWNkYTBlMDM4N2U1MTU4NDFjNTNkOWNjZjFkZmU0ODc5YmEzNjBmYjJkYmRkNmVlNWJlYmRiODcwMSIsInBhdGgiOiJhdHRhY2htZW50c1swXS5maWxlTmFtZSJ9LHsidmFsdWUiOiI1YTE5NTlmZWRkMDkyZDg1YTBmYzk3MGM0MGI3ZjcyNjYzNWRmZDMyYzI1Yjk1NjhjODlmZTE3MjQwYWMxYzNhIiwicGF0aCI6ImF0dGFjaG1lbnRzWzBdLm1pbWVUeXBlIn0seyJ2YWx1ZSI6ImRjYWVkYTNmMzg0MjYyNzc1MWU5ZGJlZDExNWFkNWQ4ZmYyOTZhYWFjYWZmNzhmNTQxNTJmNjc1MzhkYzgyZDEiLCJwYXRoIjoiYXR0YWNobWVudHNbMF0uZGF0YSJ9XQ==',
+        privacy: {
+            obfuscated: [],
+        },
+    },
+} as v3.WrappedDocument
+
+export const dnsTxtDocStoreIncorrectDocumentStore = {
+    version: SchemaId.v3,
+    '@context': [
+        'https://www.w3.org/2018/credentials/v1',
+        'https://schemata.openattestation.com/com/openattestation/1.0/DrivingLicenceCredential.json',
+        'https://schemata.openattestation.com/com/openattestation/1.0/OpenAttestation.v3.json',
+        'https://schemata.openattestation.com/com/openattestation/1.0/CustomContext.json',
+    ],
+    reference: 'SERIAL_NUMBER_123',
+    name: 'Republic of Singapore Driving Licence',
+    issuanceDate: '2010-01-01T19:23:24Z',
+    validFrom: '2010-01-01T19:23:24Z',
+    issuer: {
+        id: 'https://example.com',
+        type: 'OpenAttestationIssuer',
+        name: 'DEMO STORE',
+    },
+    type: [
+        'VerifiableCredential',
+        'DrivingLicenceCredential',
+        'OpenAttestationCredential',
+    ],
+    credentialSubject: {
+        id: 'did:example:SERIAL_NUMBER_123',
+        class: [
+            {
+                type: '3',
+                effectiveDate: '2010-01-01T19:23:24Z',
+            },
+            {
+                type: '3A',
+                effectiveDate: '2010-01-01T19:23:24Z',
+            },
+        ],
+    },
+    openAttestationMetadata: {
+        template: {
+            name: 'CUSTOM_TEMPLATE',
+            type: 'EMBEDDED_RENDERER',
+            url: 'https://localhost:3000/renderer',
+        },
+        proof: {
+            type: 'OpenAttestationProofMethod',
+            method: 'DOCUMENT_STORE',
+            value: '0x99f7E4777a8D1b6EdD5F2d9b8582e2817F0B0953',
+        },
+        identityProof: {
+            type: 'DNS-TXT',
+            identifier: 'example.tradetrust.io',
+        },
+    },
+    attachments: [
+        {
+            fileName: 'sample.pdf',
+            mimeType: 'application/pdf',
+            data: 'BASE64_ENCODED_FILE',
+        },
+    ],
+    proof: {
+        type: 'OpenAttestationMerkleProofSignature2018',
+        proofPurpose: 'assertionMethod',
+        targetHash:
+            'f039e1328ad4a21e7d58d6dab1caea228238bee71080b1364bb6f1097c39b407',
+        proofs: [],
+        merkleRoot:
+            'f039e1328ad4a21e7d58d6dab1caea228238bee71080b1364bb6f1097c39b407',
+        salts: 'W3sidmFsdWUiOiJhODAzNGZlOTA0MjNmMDAwMDdlMGMxNzA5MTg0ZjY2NWI0NDcwZTEwNDk0OGFiMzhlOTkzNGNlNTkwOWYwZmQ2IiwicGF0aCI6InZlcnNpb24ifSx7InZhbHVlIjoiMGY4N2IzMDcwZGU1YzY5YTU4OTgzMmQ2NDFlZTc1OWE1MzBiMGM3MWU2ZDQ1NzExY2YxZTVlNzUzNGZiMDA0ZiIsInBhdGgiOiJAY29udGV4dFswXSJ9LHsidmFsdWUiOiIwZDI4NTAyNjE5ZmViZTQ5NTc4YTViNmEzN2JlYzk1MTU3OWVmY2FhYmUwM2ViZjY0YmY1YzkzYTZiNmM1ZTNkIiwicGF0aCI6IkBjb250ZXh0WzFdIn0seyJ2YWx1ZSI6Ijg1OTFmZGQwMTdmOGMwMTQyNGIxYTkzOTAxZjAzNjdiNDRjYmU3ODljNzRjYTk4YzFhZjAwMzNlODc3MmExOWQiLCJwYXRoIjoiQGNvbnRleHRbMl0ifSx7InZhbHVlIjoiOGRjZjc4ZDQyZDNmMTQ4YzY1NThiZWM4ODZjNDIzZmJhODg0YThmN2NhOGFjZWRkMmY5YjViMGJhN2E3M2JiYSIsInBhdGgiOiJAY29udGV4dFszXSJ9LHsidmFsdWUiOiIzMjI1YjZlZWE1M2VhZGNhNmEzZGZhZmNlOTAyYmEyNjk4M2JmMDRjOWFmY2UwMDhhNzkxM2FiNTRmZWY1ODIwIiwicGF0aCI6InJlZmVyZW5jZSJ9LHsidmFsdWUiOiJjNGUyYWQ4Mzk1YWUxNmExMzdhMTEyNjcxN2YyNDU0ZmY2N2E5ZmFhYzY1MWJjODliMTYxZWY1NTlmYjQ5NzZlIiwicGF0aCI6Im5hbWUifSx7InZhbHVlIjoiNDRlOGZhOTEzNGVhZGRlZjE3OTRiMTE2ZDViMmM5OTE5ODdiZTYyMjA5Yjk0MjgyYzdiYjJiNTI4Zjk0Y2I3NiIsInBhdGgiOiJpc3N1YW5jZURhdGUifSx7InZhbHVlIjoiNGZiMjIxM2FmNzEwOGZjNzNlMGZlMDkwZmVmZWE2YWE2ZGNmNWJlN2ZlNWQ2YzJlMjQ3NTgzNzcyY2RmMzgxYSIsInBhdGgiOiJ2YWxpZEZyb20ifSx7InZhbHVlIjoiNmQ5OGUxZWJmNDRlYjdkNDUyZTk1YjY2NzAxNzY3YjYyMjU0NTIwNDlmNDNjMjJhMjhkY2YwYjA0Y2JhNGE1ZiIsInBhdGgiOiJpc3N1ZXIuaWQifSx7InZhbHVlIjoiMDAxMDIzYTJlNDkwYTNhYzdhYzAyOTNiNjJhZmRhNTNlYzJjNmRiMDRmZDVkODVjMWU0OWY0MzVmNjNjNTQ2NiIsInBhdGgiOiJpc3N1ZXIudHlwZSJ9LHsidmFsdWUiOiI4MWVkODJjYWRhOThjY2NjZDJjZDgyNzFlZTg5NzRlNmUyNWRmMDlkYzdhMzg0MGJhOWQxY2NjYWVhZDIzZDA4IiwicGF0aCI6Imlzc3Vlci5uYW1lIn0seyJ2YWx1ZSI6IjA5NjlhMjIwYTUyZDVhZDA3YjZmZjFlYTBhMzY2NzY1OTQ1NGEyYjRmOTJmN2JiNTgwYjg1MmYwZWIyMGE3M2MiLCJwYXRoIjoidHlwZVswXSJ9LHsidmFsdWUiOiJhZDU3YThjYmNhZGI4N2IyMDQxNzM0YjRjNDU4ODVmMDhhNWFmZTc5YTIyNTQ1NjlhOTNjMWM1Yjc4ZGRlYzk2IiwicGF0aCI6InR5cGVbMV0ifSx7InZhbHVlIjoiZjY0ODM4MDVmODE5NThkNWViYjk0ZDM5MTk3MjAzODVlODUyMmFmN2JmNmE1NGRjZDU1YTJmZmFjMjdlN2ViZSIsInBhdGgiOiJ0eXBlWzJdIn0seyJ2YWx1ZSI6IjRlNDA0NGIyYWQ1YmZmZGI1OWIyMWUyZWM1MWEzMzNhN2QwMGRiMTNjOTY2ODc2ZGZhZTM2ODI5N2EzZDk1NmQiLCJwYXRoIjoiY3JlZGVudGlhbFN1YmplY3QuaWQifSx7InZhbHVlIjoiMTQzZjkzYWEwMzFmZTUwNzI3NGE2ODEyZGZmZDkzOTIxMWE5YWRhZjRjNGUzMzBhOGYzN2RmNmE1M2E1NmY0ZCIsInBhdGgiOiJjcmVkZW50aWFsU3ViamVjdC5jbGFzc1swXS50eXBlIn0seyJ2YWx1ZSI6ImViMjFjYWI2NDU5MTdlOWQ4MGYzOWQwNmNkYzdjZDE2ZTRiYmRjZTk4ZmFmZTRlM2FiYTY2NmQwZTE5Zjc3NzAiLCJwYXRoIjoiY3JlZGVudGlhbFN1YmplY3QuY2xhc3NbMF0uZWZmZWN0aXZlRGF0ZSJ9LHsidmFsdWUiOiJjZGJlYzlmMjE1YjNlM2YwNzNhNGQyY2Q0NGIyODJkZDY2MjVjZDgzMGFkZGY2NTQ1MWM5ZWQ0YjQ3MjEzMmE0IiwicGF0aCI6ImNyZWRlbnRpYWxTdWJqZWN0LmNsYXNzWzFdLnR5cGUifSx7InZhbHVlIjoiYzdiYzdiNGIxYWM1OGQ0MThiZmNkMDZiOTdjN2Y3Yzk4MjFlMjkxYWJlNmFiYzVhNWNiMmYzZDIzNzdiMDNjZSIsInBhdGgiOiJjcmVkZW50aWFsU3ViamVjdC5jbGFzc1sxXS5lZmZlY3RpdmVEYXRlIn0seyJ2YWx1ZSI6ImE1ZGIwNWZiZGIxMmQ5ZTdlNTUwMWJmYTdlOGE0NTg4OGJjYWI4YTIxNTQ0YjE1NzUzMjIyZDhjNWY5MWJkZTQiLCJwYXRoIjoib3BlbkF0dGVzdGF0aW9uTWV0YWRhdGEudGVtcGxhdGUubmFtZSJ9LHsidmFsdWUiOiI4MjE4YjkwNDJhNjhiNjhiZTU3YmQ4MWY3ODc5MzdjZWM3MDVhNDcxMDllYTU4NjVlMjMwN2E0MmY3ZThjY2IzIiwicGF0aCI6Im9wZW5BdHRlc3RhdGlvbk1ldGFkYXRhLnRlbXBsYXRlLnR5cGUifSx7InZhbHVlIjoiNDFlMjQyMGU0NThhNGRjOGM2ZGM2YzczZDllYTlmMGVhMjVmZTQ1YzY5OTliMWZjZjEyNTI1M2EyYzhjNTY1OSIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS50ZW1wbGF0ZS51cmwifSx7InZhbHVlIjoiZmNhNGQwNzA3NDEzZDM2ZjhjM2ZmMDVkOTIzMTNhMmEwYmIxNGU5Y2IzNjk3ODQwNTljNTNjZTVlYzJiN2QzMiIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS5wcm9vZi50eXBlIn0seyJ2YWx1ZSI6ImE4MzM4OTM1YjRiOWZmNDc1NmE0NjJjMjZmNmY4ZTYzYmVjY2VlNzlhYjIwYTk3MDlkMTY4N2Q3MjBmNWY4YTQiLCJwYXRoIjoib3BlbkF0dGVzdGF0aW9uTWV0YWRhdGEucHJvb2YubWV0aG9kIn0seyJ2YWx1ZSI6Ijk5NGUxODNiNjdkZDhkZjBkZTVlN2RiMTdiNzI4MTJlNzQ0OWMyZjA5MjYzNmZlNGI0M2ZmYjIzMTM0YjhkNDgiLCJwYXRoIjoib3BlbkF0dGVzdGF0aW9uTWV0YWRhdGEucHJvb2YudmFsdWUifSx7InZhbHVlIjoiODE4MTJkNDgxNGFjMDJlYjZjOWNiMDBjOTZiOTE4MTlhMTgxZGE1MGVmYWZmYTY0N2YyMzlmNDQ5NmFmZTU2MiIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS5pZGVudGl0eVByb29mLnR5cGUifSx7InZhbHVlIjoiN2M2YTNkZTNlNjdmNGNiMWNjMGRhYzlmZDczYzdmYzFmMzM3NDlmMWM3YTZiM2E1YmQzOWNkZDdhOWZlMTQ4MSIsInBhdGgiOiJvcGVuQXR0ZXN0YXRpb25NZXRhZGF0YS5pZGVudGl0eVByb29mLmlkZW50aWZpZXIifSx7InZhbHVlIjoiOTI1NzUxNDNmMmI2NzhkZjRmYmY3MjAzZTY4MzkxOGUwNGFlODgwYTk1ZTc2MGU4ZmExMDBlNzU2YzEwNWMwMSIsInBhdGgiOiJhdHRhY2htZW50c1swXS5maWxlTmFtZSJ9LHsidmFsdWUiOiJlMmVhYzE4YjFkNTY2NTU2Yjk2MmE4N2ViMmNlM2NmOWJmNmMwNDE1NzExOTJhOGZjN2Q5OWZhMmE4M2VjYTViIiwicGF0aCI6ImF0dGFjaG1lbnRzWzBdLm1pbWVUeXBlIn0seyJ2YWx1ZSI6Ijk4Zjk1MWM5NThlYmRiNmYzZWMyN2VkMDg1NDE0ZGIzZjhhZWFhM2M0Zjk0M2FmNzBhZDY5ZDE1ZmQxMTNmMDAiLCJwYXRoIjoiYXR0YWNobWVudHNbMF0uZGF0YSJ9XQ==',
+        privacy: {
+            obfuscated: [],
+        },
+    },
+} as v3.WrappedDocument

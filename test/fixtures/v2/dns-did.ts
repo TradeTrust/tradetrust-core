@@ -1,4 +1,10 @@
-import { SchemaId, WrappedDocument, v2 } from '@tradetrust-tt/tradetrust'
+import {
+    SchemaId,
+    SignedWrappedDocument,
+    WrappedDocument,
+    v2,
+} from '@tradetrust-tt/tradetrust'
+import { RevocationType } from '@tradetrust-tt/tradetrust/dist/types/__generated__/schema.2.0'
 
 interface CustomDocument extends v2.OpenAttestationDocument {
     recipient: {
@@ -6,7 +12,7 @@ interface CustomDocument extends v2.OpenAttestationDocument {
     }
 }
 
-export const dnsDidSigned: WrappedDocument<CustomDocument> = {
+export const dnsDidSigned: SignedWrappedDocument<CustomDocument> = {
     version: SchemaId.v2,
     data: {
         recipient: {
@@ -22,7 +28,7 @@ export const dnsDidSigned: WrappedDocument<CustomDocument> = {
                 id: '41393850-42d7-4555-be18-c422c25faccb:string:did:ethr:0x391aFf3942857a10958425FebF1fC1938D9F5AE7',
                 name: 'd21dd4c4-493a-44ac-ba6c-4ccca772d0cc:string:Demo Issuer',
                 revocation: {
-                    type: '79404e49-d587-4438-b6a2-b799cc306e3b:string:NONE',
+                    type: '79404e49-d587-4438-b6a2-b799cc306e3b:string:NONE' as v2.RevocationType,
                 },
                 identityProof: {
                     type: 'abbb99fa-98cb-42d0-bc3f-4500623146ad:string:DNS-DID',
@@ -69,7 +75,7 @@ export const dnsDidUnSigned: WrappedDocument<CustomDocument> = {
                 id: '41393850-42d7-4555-be18-c422c25faccb:string:did:ethr:0x391aFf3942857a10958425FebF1fC1938D9F5AE7',
                 name: 'd21dd4c4-493a-44ac-ba6c-4ccca772d0cc:string:Demo Issuer',
                 revocation: {
-                    type: '79404e49-d587-4438-b6a2-b799cc306e3b:string:NONE',
+                    type: '79404e49-d587-4438-b6a2-b799cc306e3b:string:NONE' as RevocationType,
                 },
                 identityProof: {
                     type: 'abbb99fa-98cb-42d0-bc3f-4500623146ad:string:DNS-DID',
@@ -90,7 +96,7 @@ export const dnsDidUnSigned: WrappedDocument<CustomDocument> = {
     },
 }
 
-export const dnsDidSignedAndTampered: WrappedDocument<CustomDocument> = {
+export const dnsDidSignedAndTampered: SignedWrappedDocument<CustomDocument> = {
     version: SchemaId.v2,
     data: {
         recipient: {
@@ -106,7 +112,7 @@ export const dnsDidSignedAndTampered: WrappedDocument<CustomDocument> = {
                 id: '41393850-42d7-4555-be18-c422c25faccb:string:did:ethr:0x391aFf3942857a10958425FebF1fC1938D9F5AE7',
                 name: 'd21dd4c4-493a-44ac-ba6c-4ccca772d0cc:string:Demo Issuer',
                 revocation: {
-                    type: '79404e49-d587-4438-b6a2-b799cc306e3b:string:NONE',
+                    type: '79404e49-d587-4438-b6a2-b799cc306e3b:string:NONE' as v2.RevocationType,
                 },
                 identityProof: {
                     type: 'abbb99fa-98cb-42d0-bc3f-4500623146ad:string:DNS-DID',

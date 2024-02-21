@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
     dnsTxtDocStore,
     dnsTxtDocStoreTampered,
@@ -10,7 +9,6 @@ import {
 import { describe, it, expect } from 'vitest'
 import { verify, isValid } from '.'
 import { ethers } from 'ethers'
-// import util from 'util'
 
 const localProvider = new ethers.providers.JsonRpcProvider(
     'http://127.0.0.1:8545'
@@ -618,86 +616,5 @@ describe('verify(integration) dns-txt with document store', () => {
         expect(isValid(fragments, ['DOCUMENT_INTEGRITY'])).toStrictEqual(true)
         expect(isValid(fragments, ['ISSUER_IDENTITY'])).toStrictEqual(true)
         expect(isValid(fragments)).toStrictEqual(true)
-    })
-    it('should return in-valid fragments for empty document', async () => {
-        const fragments = await verify({}, { provider: localProvider })
-        expect(fragments).toMatchInlineSnapshot(`
-          [
-            {
-              "name": "OpenAttestationHash",
-              "reason": {
-                "code": 2,
-                "codeString": "SKIPPED",
-                "message": "Document does not have merkle root, target hash or data.",
-              },
-              "status": "SKIPPED",
-              "type": "DOCUMENT_INTEGRITY",
-            },
-            {
-              "name": "OpenAttestationEthereumTokenRegistryStatus",
-              "reason": {
-                "code": 4,
-                "codeString": "SKIPPED",
-                "message": "Document issuers doesn't have "tokenRegistry" property or TOKEN_REGISTRY method",
-              },
-              "status": "SKIPPED",
-              "type": "DOCUMENT_STATUS",
-            },
-            {
-              "name": "OpenAttestationEthereumDocumentStoreStatus",
-              "reason": {
-                "code": 4,
-                "codeString": "SKIPPED",
-                "message": "Document issuers doesn't have "documentStore" or "certificateStore" property or DOCUMENT_STORE method",
-              },
-              "status": "SKIPPED",
-              "type": "DOCUMENT_STATUS",
-            },
-            {
-              "name": "OpenAttestationDidSignedDocumentStatus",
-              "reason": {
-                "code": 0,
-                "codeString": "SKIPPED",
-                "message": "Document was not signed by DID directly",
-              },
-              "status": "SKIPPED",
-              "type": "DOCUMENT_STATUS",
-            },
-            {
-              "name": "OpenAttestationDnsTxtIdentityProof",
-              "reason": {
-                "code": 2,
-                "codeString": "SKIPPED",
-                "message": "Document issuers doesn't have "documentStore" / "tokenRegistry" property or doesn't use DNS-TXT type",
-              },
-              "status": "SKIPPED",
-              "type": "ISSUER_IDENTITY",
-            },
-            {
-              "name": "OpenAttestationDnsDidIdentityProof",
-              "reason": {
-                "code": 0,
-                "codeString": "SKIPPED",
-                "message": "Document was not issued using DNS-DID",
-              },
-              "status": "SKIPPED",
-              "type": "ISSUER_IDENTITY",
-            },
-            {
-              "name": "OpenAttestationDidIdentityProof",
-              "reason": {
-                "code": 0,
-                "codeString": "SKIPPED",
-                "message": "Document is not using DID as top level identifier or has not been wrapped",
-              },
-              "status": "SKIPPED",
-              "type": "ISSUER_IDENTITY",
-            },
-          ]
-        `)
-        expect(isValid(fragments, ['DOCUMENT_INTEGRITY'])).toStrictEqual(false)
-        expect(isValid(fragments, ['DOCUMENT_STATUS'])).toStrictEqual(false)
-        expect(isValid(fragments, ['ISSUER_IDENTITY'])).toStrictEqual(false)
-        expect(isValid(fragments)).toStrictEqual(false)
     })
 })

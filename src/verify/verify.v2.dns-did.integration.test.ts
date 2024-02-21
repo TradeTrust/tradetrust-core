@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
     dnsDidSignedAndTampered,
     dnsDidUnSigned,
@@ -7,7 +6,7 @@ import {
 import { describe, it, expect } from 'vitest'
 import { isValid, verify } from '.'
 import { ethers } from 'ethers'
-import util from 'util'
+import { v3 } from '@tradetrust-tt/tradetrust'
 
 const localProvider = new ethers.providers.JsonRpcProvider(
     'http://127.0.0.1:8545'
@@ -285,12 +284,9 @@ describe('verify(integration) dns-txt with dns:did', () => {
         expect(isValid(fragments)).toStrictEqual(false)
     })
     it('should return in-valid fragments for empty document', async () => {
-        const fragments = await verify(
-            {},
-            {
-                provider: localProvider,
-            }
-        )
+        const fragments = await verify({} as v3.WrappedDocument, {
+            provider: localProvider,
+        })
         expect(fragments).toMatchInlineSnapshot(`
           [
             {

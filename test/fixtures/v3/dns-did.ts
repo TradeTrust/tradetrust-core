@@ -1,12 +1,6 @@
-import { SchemaId, WrappedDocument, v2 } from '@tradetrust-tt/tradetrust'
+import { SchemaId, v3 } from '@tradetrust-tt/tradetrust'
 
-interface CustomDocument extends v2.OpenAttestationDocument {
-    recipient: {
-        name: string
-    }
-}
-
-export const dnsDidSigned: WrappedDocument<CustomDocument> = {
+export const dnsDidSigned = {
     version: SchemaId.v3,
     '@context': [
         'https://www.w3.org/2018/credentials/v1',
@@ -76,8 +70,8 @@ export const dnsDidSigned: WrappedDocument<CustomDocument> = {
         signature:
             '0x7d43a79c4dc1da3300457883bd2d5e3f181f1a19742984cfb0b191412793984f3fa83d9f5d3a800b4bd9403a0c35f87415da0d19daa23f3b2d05b8f425085f821c',
     },
-}
-export const dnsDidUnSigned: WrappedDocument<CustomDocument> = {
+} as v3.WrappedDocument
+export const dnsDidUnSigned = {
     version: SchemaId.v3,
     '@context': [
         'https://www.w3.org/2018/credentials/v1',
@@ -144,9 +138,9 @@ export const dnsDidUnSigned: WrappedDocument<CustomDocument> = {
             obfuscated: [],
         },
     },
-}
+} as v3.WrappedDocument
 
-export const dnsDidSignedAndTampered: WrappedDocument<CustomDocument> = {
+export const dnsDidSignedAndTampered = {
     version: SchemaId.v3,
     '@context': [
         'https://www.w3.org/2018/credentials/v1',
@@ -216,4 +210,4 @@ export const dnsDidSignedAndTampered: WrappedDocument<CustomDocument> = {
         signature:
             '0x7d43a79c4dc1da3300457883bd2d5e3f181f1a19742984cfb0b191412793984f3fa83d9f5d3a800b4bd9403a0c35f87415da0d19daa23f3b2d05b8f425085f821c',
     },
-}
+} as v3.WrappedDocument

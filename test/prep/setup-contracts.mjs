@@ -5,8 +5,7 @@ const ACCOUNT_ADDRESS = '0xe0A71284EF59483795053266CB796B65E48B5124'
 const ACCOUNT_KEY =
     '0xe82294532bcfcd8e0763ee5cef194f36f00396be59b94fb418f5f8d83140d9a7'
 
-// account used to test dns did documents
-//  const ACCOUNT_DNS_DID_ADDRESS = '0x391aFf3942857a10958425FebF1fC1938D9F5AE7'
+// const ACCOUNT_DNS_DID_ADDRESS = '0x391aFf3942857a10958425FebF1fC1938D9F5AE7'
 // const ACCOUNT_DNS_DID_KEY =
 ;('0x3760fb287bee810607433485cfa3fc665c2d682a1816991dccce645b096ae19a')
 const TOKEN_REGISTRY_ADDRESS = '0x9Eb613a88534E2939518f4ffBFE65F5969b491FF'
@@ -38,9 +37,12 @@ const mintedMerkleRootTransferrableRecord = [
     '0x82de42fe0d4dc965546a08f0555a33d66f25192f8121dab54b0a8d213a984a81', //incorrect token reg
 
     // v3 documents
+    '9e4f74864999eed515ebc5ff02a4ee21e2cc99d660690864784055b6aeff04af', // issued correctly
+    '3b11827925e0ceb00d4fb7dc8aac83ada4009e70315e8f64a75b75c361318a4f', // incorrect dns
+    'f5a2421f4d1bc7081766f025c1f84eb1730837e1d797695942e15920e438498c', // incorrect token reg
 ]
 
-const revokedMerkleRoot = [
+const revokedMerkleRootVerifiableDocs = [
     '0x8db570494b2beeea4e6431f2f7abda199f676ae50c2a7bb4a0d0c548da0952df', // v3 record
     'eeef582def4ebea8fad684c33f67194f3a922692a3d9b96ca9d90150adf7259c', //v3 record
 ]
@@ -66,7 +68,7 @@ issuedMerkleRootVerifiableDocs.forEach((ele) => {
 })
 
 console.log('\n## Revoking Documents on Document Store ##\n')
-revokedMerkleRoot.forEach((ele) => {
+revokedMerkleRootVerifiableDocs.forEach((ele) => {
     shell.exec(
         `${TT_CLI_PATH} document-store revoke --address ${DOCUMENT_STORE_ADDRESS} --hash ${ele}  --network local --k ${ACCOUNT_KEY}`
     )
