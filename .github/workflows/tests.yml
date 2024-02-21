@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 18.x
       - run: npm ci
-      - run: npm run test:concurrently
+      - run: npm run test:ci
 
   test-build:
     name: Test Build
