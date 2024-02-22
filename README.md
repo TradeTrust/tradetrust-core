@@ -1,11 +1,11 @@
 # TradeTrust Core
 
-Unified interface for interacting with TradeTrust's various services. This libraru contains a set of modules.
+Unified interface for interacting with TradeTrust's various services. This library contains a set of modules.
 
-| Plugin | Description                                            |
-| ------ | ------------------------------------------------------ |
-| Verify | Verify TradeTrust wrapped document                     |
-| Utils  | Provide utility methods for TradeTrust functionalities |
+| Module            | Description                                            |
+| ----------------- | ------------------------------------------------------ |
+| [Verify](#verify) | Verify TradeTrust issued document                      |
+| [Utils](#utils)   | Provide utility methods for TradeTrust functionalities |
 
 ## Installation
 
@@ -15,7 +15,7 @@ npm i @tradetrust-tt/tradetrust-core
 
 ## Verify
 
-This module that allows you to verify wrapped document programmatically. A verification happens on a wrapped document, and use `isValid` method to answer some questions:
+`verify` allows you to verify issued document programmatically. After verification, use `isValid` method to answer some questions:
 
 -   Has the document been tampered with ?
 -   Is the issuance state of the document valid ?
@@ -24,23 +24,30 @@ This module that allows you to verify wrapped document programmatically. A verif
 Document can be either [verifiable document](https://docs.tradetrust.io/docs/tutorial/verifiable-documents/overview) or [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview) which follows [TradeTrust document schema](https://docs.tradetrust.io/docs/topics/introduction/tradetrust-document-schema/)
 
 ```ts
-// verify document on testnet
+// verify document using network name
 import { verify, isValid } from '@tradetrust-tt/tradetrust-core/verify'
 let document = {
     // your tradetrust document
 }
 const fragments = await verify(document, {
-    network: 'sepolia',
+    network: 'sepolia', // can also provide other networks such as mainnet
 })
 console.log(isValid(fragments))
 ```
 
 ```ts
-// verify document using your own blockchain provider
+// verify document using provider
 import { ethers } from 'ethers'
-// Replace YOUR_RPC_URL with your actual JSON-RPC URL
-const rpcUrl = 'YOUR_RPC_URL'
-const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+import { utils } from '@tradetrust-tt/tt-verify'
+
+const providerOptions = {
+    // modify your provider options accordingly
+    network: 'sepolia',
+    providerType: 'infura',
+    apiKey: 'abdfddsfe23232',
+}
+const provider = utils.generateProvider(providerOptions)
+
 let document = {
     // your tradetrust document
 }
@@ -48,16 +55,18 @@ const fragments = await verify(document, { provider })
 console.log(isValid(fragments))
 ```
 
+For more information about building provider, visit [tt-verify repository](https://github.com/TradeTrust/tt-verify?tab=readme-ov-file#provider)
+
 ## Utils
 
-This module provide utilities method that supports the shared functionalities for other TradeTrust modules.
+This module provides utility methods that supports the shared functionalities for other TradeTrust modules.
 
-#### InterceptFragments
+#### InterpretFragments
 
-InterceptFragments allows you to extract out the verified results from the fragments.
+`interpretFragments` allows you to extract out the verified results from the fragments.
 
 ```ts
-import {interpretFragments} from '@tradetrust-tt/tradetrust-core/verify`;
+import {interpretFragments} from '@tradetrust-tt/tradetrust-core/utils`;
 
 const fragments = await verify(document, {
             network: 'sepolia',
