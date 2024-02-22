@@ -1,37 +1,81 @@
-## TradeTrust Core
+# TradeTrust Core
 
-Unified interface for interacting with TradeTrust's various services.
+Unified interface for interacting with TradeTrust's various services. This library contains a set of modules.
 
-## Getting Started
+| Module            | Description                                            |
+| ----------------- | ------------------------------------------------------ |
+| [Verify](#verify) | Verify TradeTrust issued document                      |
+| [Utils](#utils)   | Provide utility methods for TradeTrust functionalities |
 
-To get started with this project, clone the repository and install the dependencies:
+## Installation
 
-### install
+```sh
+npm i @tradetrust-tt/tradetrust-core
+```
 
-Building the Project
-You can build the project using the following command:
-`npm i`
+## Verify
 
-#### build
+`verify` allows you to verify issued document programmatically. After verification, use `isValid` method to answer some questions:
 
-This will generate the necessary files in the dist directory.
-`npm run build`
+-   Has the document been tampered with ?
+-   Is the issuance state of the document valid ?
+-   Is the document issuer identity valid ? (see [identity proof](https://docs.tradetrust.io/docs/topics/verifying-documents/issuer-identity))
 
-#### Running Tests
+Document can be either [verifiable document](https://docs.tradetrust.io/docs/tutorial/verifiable-documents/overview) or [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview) which follows [TradeTrust document schema](https://docs.tradetrust.io/docs/topics/introduction/tradetrust-document-schema/)
 
-To run the tests, use the following command:
-`npm run test`
+```ts
+// verify document using network name
+import { verify, isValid } from '@tradetrust-tt/tradetrust-core/verify'
+let document = {
+    // your tradetrust document
+}
+const fragments = await verify(document, {
+    network: 'sepolia', // can also provide other networks such as homestead
+})
+console.log(isValid(fragments))
+```
 
-#### Linting
+```ts
+// verify document using provider
+import { ethers } from 'ethers'
+import { utils } from '@tradetrust-tt/tt-verify'
 
-To lint the project, use the following command:
-`npm run lint`
+const providerOptions = {
+    // modify your provider options accordingly
+    network: 'sepolia',
+    providerType: 'infura',
+    apiKey: 'abdfddsfe23232',
+}
+const provider = utils.generateProvider(providerOptions)
 
-#### lint fix
+let document = {
+    // your tradetrust document
+}
+const fragments = await verify(document, { provider })
+console.log(isValid(fragments))
+```
 
-To automatically fix linting errors, use the following command:
-`npm run lint-fix`
+For more information about building provider, visit [tt-verify repository](https://github.com/TradeTrust/tt-verify?tab=readme-ov-file#provider)
 
-#### Contributing
+## Utils
 
-We welcome contributions to the TradeTrust Core project. Please feel free to submit a pull request or open an issue.
+This module provides utility methods that supports the shared functionalities for other TradeTrust modules.
+
+#### InterpretFragments
+
+`interpretFragments` allows you to extract out the verified results from the fragments.
+
+```ts
+import {interpretFragments} from '@tradetrust-tt/tradetrust-core/utils`;
+
+const fragments = await verify(document, {
+            network: 'sepolia',
+});
+
+const {hasValid, issuedValid, identityValid} = interpretFragments(fragments);
+console.log({hasValid, issuedValid, identityValid});
+```
+
+## Contributing
+
+We welcome contributions to the TradeTrust core library. Please feel free to submit a pull request or open an issue.
