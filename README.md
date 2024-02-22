@@ -30,7 +30,7 @@ let document = {
     // your tradetrust document
 }
 const fragments = await verify(document, {
-    network: 'sepolia', // can also provide other networks such as mainnet
+    network: 'sepolia', // can also provide other networks such as homestead
 })
 console.log(isValid(fragments))
 ```
