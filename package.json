@@ -17,26 +17,53 @@
     "test:ci": "concurrently -k -s first \"npm:test:prep:blockchain\" \"npm:test:prep\"",
     "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:type",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
-    "build:esm": "tsc --module es2015 --outDir dist/esm",
+    "build:esm": "tsc --module es2020 --outDir dist/esm",
     "build:type": "tsc -d --emitDeclarationOnly --outDir dist/types",
     "lint": "eslint ./src --ext .js,.ts",
     "lint-fix": "eslint ./src --ext .js,.ts --fix",
     "clean": "rm -rf dist/"
   },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/types/index.d.ts"
+      ],
+      "utils/constants/*": [
+        "./dist/types/utils/constants/*.d.ts"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js"
+    },
+    "./utils/constants/*": {
+      "require": "./dist/cjs/utils/constants/*.js",
+      "import": "./dist/esm/utils/constants/*.js"
+    }
+  },
   "author": "tradetrust",
   "license": "ISC",
   "devDependencies": {
+    "@tradetrust-tt/tradetrust-cli": "^2.17.1",
     "@commitlint/config-conventional": "^16.0.0",
+    "@types/gtag.js": "0.0.19",
+    "@types/jsdom": "^21.1.6",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "@vitest/browser": "^1.5.2",
     "commitizen": "^4.3.0",
     "concurrently": "^6.2.0",
     "cz-conventional-changelog": "^3.3.0",
+    "dotenv": "^16.4.5",
     "eslint": "^8.56.0",
+    "ganache": "^7.5.0",
+    "jsdom": "^24.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.2.4",
     "typescript": "^5.3.3",
-    "vitest": "^1.2.2"
+    "vitest": "^1.5.2"
   },
   "repository": {
     "type": "git",
@@ -44,12 +71,9 @@
   },
   "dependencies": {
     "@tradetrust-tt/tradetrust": "^6.9.0",
-    "@tradetrust-tt/tradetrust-cli": "^2.17.1",
-    "@tradetrust-tt/tradetrust-utils": "^1.9.1",
     "@tradetrust-tt/tt-verify": "^8.7.0",
-    "@vitest/coverage-v8": "^1.2.2",
+    "@vitest/coverage-v8": "^1.5.2",
     "ethers": "^5.7.2",
-    "ganache": "^7.5.0",
     "shelljs": "^0.8.5"
   },
   "publishConfig": {
@@ -59,9 +83,6 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "optionalDependencies": {
-    "fsevents": "^2.3.2"
   },
   "engines": {
     "node": "18.x"
