@@ -14,7 +14,7 @@
     "test:prep": "run-s test:prep:contracts test",
     "test:concurrently": "concurrently -k -s first \"npm:test:prep:blockchain\" \"npm:test:prep\"",
     "test": "npx vitest --run",
-    "test:ci": "concurrently -k -s first \"npm:test:prep:blockchain\" \"npm:test:prep\"",
+    "test:ci": "concurrently -k -s first \"npminh:test:prep:blockchain\" \"npm:test:prep\"",
     "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:type",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
     "build:esm": "tsc --module es2020 --outDir dist/esm",
@@ -28,8 +28,20 @@
       ".": [
         "./dist/types/index.d.ts"
       ],
-      "utils/constants/*": [
-        "./dist/types/utils/constants/*.d.ts"
+      "utils/constants": [
+        "./dist/types/utils/constants/index.d.ts"
+      ],
+      "utils/analytics": [
+        "./dist/types/utils/analytics/index.d.ts"
+      ],
+      "utils/fragement": [
+        "./dist/types/utils/fragement/index.d.ts"
+      ],
+      "utils/static": [
+        "./dist/types/utils/static/index.d.ts"
+      ],
+      "verify": [
+        "./dist/types/verify/index.d.ts"
       ]
     }
   },
@@ -38,9 +50,25 @@
       "require": "./dist/cjs/index.js",
       "import": "./dist/esm/index.js"
     },
-    "./utils/constants/*": {
-      "require": "./dist/cjs/utils/constants/*.js",
-      "import": "./dist/esm/utils/constants/*.js"
+    "./utils/constants": {
+      "require": "./dist/cjs/utils/constants/index.js",
+      "import": "./dist/esm/utils/constants/index.js"
+    },
+    "./utils/analytics": {
+      "require": "./dist/cjs/utils/analytics/index.js",
+      "import": "./dist/esm/utils/analytics/index.js"
+    },
+    "./utils/fragement": {
+      "require": "./dist/cjs/utils/fragement/index.js",
+      "import": "./dist/esm/utils/fragement/index.js"
+    },
+    "./utils/static": {
+      "require": "./dist/cjs/utils/static/index.js",
+      "import": "./dist/esm/utils/static/index.js"
+    },
+    "./verify": {
+      "require": "./dist/cjs/verify/index.js",
+      "import": "./dist/esm/verify/index.js"
     }
   },
   "author": "tradetrust",
@@ -63,7 +91,10 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^3.2.4",
     "typescript": "^5.3.3",
-    "vitest": "^1.5.2"
+    "vitest": "^1.5.2",
+    "@vitest/coverage-v8": "^1.5.2",
+    "ethers": "^5.7.2",
+    "shelljs": "^0.8.5"
   },
   "repository": {
     "type": "git",
@@ -71,10 +102,7 @@
   },
   "dependencies": {
     "@tradetrust-tt/tradetrust": "^6.9.0",
-    "@tradetrust-tt/tt-verify": "^8.7.0",
-    "@vitest/coverage-v8": "^1.5.2",
-    "ethers": "^5.7.2",
-    "shelljs": "^0.8.5"
+    "@tradetrust-tt/tt-verify": "^8.7.0"
   },
   "publishConfig": {
     "access": "public"
