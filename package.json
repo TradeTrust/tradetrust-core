@@ -40,6 +40,9 @@
       "utils/static": [
         "./dist/types/utils/static/index.d.ts"
       ],
+      "utils/provider": [
+        "./dist/types/utils/provider/index.d.ts"
+      ],
       "verify": [
         "./dist/types/verify/index.d.ts"
       ]
@@ -65,6 +68,10 @@
     "./utils/static": {
       "require": "./dist/cjs/utils/static/index.js",
       "import": "./dist/esm/utils/static/index.js"
+    },
+    "./utils/provider": {
+      "require": "./dist/cjs/utils/provider/index.js",
+      "import": "./dist/esm/utils/provider/index.js"
     },
     "./verify": {
       "require": "./dist/cjs/verify/index.js",
