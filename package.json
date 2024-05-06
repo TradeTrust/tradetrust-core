@@ -14,7 +14,7 @@
     "test:prep": "run-s test:prep:contracts test",
     "test:concurrently": "concurrently -k -s first \"npm:test:prep:blockchain\" \"npm:test:prep\"",
     "test": "npx vitest --run",
-    "test:ci": "concurrently -k -s first \"npminh:test:prep:blockchain\" \"npm:test:prep\"",
+    "test:ci": "concurrently -k -s first \"npm:test:prep:blockchain\" \"npm:test:prep\"",
     "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:type",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
     "build:esm": "tsc --module es2020 --outDir dist/esm",

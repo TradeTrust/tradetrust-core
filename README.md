@@ -24,35 +24,31 @@ npm i @tradetrust-tt/tradetrust-core
 Document can be either [verifiable document](https://docs.tradetrust.io/docs/tutorial/verifiable-documents/overview) or [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview) which follows [TradeTrust document schema](https://docs.tradetrust.io/docs/topics/introduction/tradetrust-document-schema/)
 
 ```ts
-// verify document using network name
-import { verify, isValid } from '@tradetrust-tt/tradetrust-core/verify'
-let document = {
-    // your tradetrust document
-}
-const fragments = await verify(document, {
-    network: 'sepolia', // can also provide other networks such as homestead
-})
-console.log(isValid(fragments))
-```
-
-```ts
-// verify document using provider
-import { ethers } from 'ethers'
-import { utils } from '@tradetrust-tt/tt-verify'
+import {
+    verify,
+    isValid,
+    interpretFragments,
+    generateProvider,
+    providerType,
+} from '@tradetrust-tt/tradetrust-core'
 
 const providerOptions = {
     // modify your provider options accordingly
     network: 'sepolia',
-    providerType: 'infura',
-    apiKey: 'abdfddsfe23232',
+    providerType: 'infura' as providerType,
+    apiKey: 'your-api-key',
 }
-const provider = utils.generateProvider(providerOptions)
+// create provider object
+const provider = generateProvider(providerOptions)
 
 let document = {
-    // your tradetrust document
-}
-const fragments = await verify(document, { provider })
-console.log(isValid(fragments))
+    // tradetrust document
+} as any
+
+verify(document, { provider }).then((res) => {
+    // to check the overall validity of the document
+    console.log(isValid(res))
+})
 ```
 
 For more information about building provider, visit [tt-verify repository](https://github.com/TradeTrust/tt-verify?tab=readme-ov-file#provider)
