@@ -81,27 +81,27 @@
   "author": "tradetrust",
   "license": "ISC",
   "devDependencies": {
-    "@tradetrust-tt/tradetrust-cli": "^2.17.1",
     "@commitlint/config-conventional": "^16.0.0",
+    "@tradetrust-tt/tradetrust-cli": "^2.17.1",
     "@types/gtag.js": "0.0.19",
     "@types/jsdom": "^21.1.6",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vitest/browser": "^1.5.2",
+    "@vitest/coverage-v8": "^1.5.2",
     "commitizen": "^4.3.0",
     "concurrently": "^6.2.0",
     "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^16.4.5",
     "eslint": "^8.56.0",
+    "ethers": "^5.7.2",
     "ganache": "^7.5.0",
     "jsdom": "^24.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.2.4",
+    "shelljs": "^0.8.5",
     "typescript": "^5.3.3",
-    "vitest": "^1.5.2",
-    "@vitest/coverage-v8": "^1.5.2",
-    "ethers": "^5.7.2",
-    "shelljs": "^0.8.5"
+    "vitest": "^1.5.2"
   },
   "repository": {
     "type": "git",
@@ -121,5 +121,9 @@
   },
   "engines": {
     "node": "18.x"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.17.2",
+    "fsevents": "^2.3.2"
   }
 }

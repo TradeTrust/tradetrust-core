@@ -1,12 +1,6 @@
 # TradeTrust Core
 
-Unified interface for interacting with TradeTrust's various services. This library contains a set of modules.
-
--   [verify](#verify-module) contains methods related to verification of Tradetrust documents.
--   [utils] provide utility methods for TradeTrust functionalities. It contains sub modules.
-    -   [constants](#utilsconstants-module) contains constant values, such as list of supported networks
-    -   [fragment](#utilsfragments-module) provides a set of methods to interact with verification fragments
-    -   [provider](#utilsproviders-module) contains method to generate provider
+Unified interface for interacting with TradeTrust's various services such as document verification and validation of the fragments. This library contains a set of modules.
 
 ## Installation
 
@@ -14,7 +8,7 @@ Unified interface for interacting with TradeTrust's various services. This libra
 npm i @tradetrust-tt/tradetrust-core
 ```
 
-## Example
+## Basic Usage
 
 This example provides how to verify tradetrust document using your own provider configurations.
 
@@ -28,7 +22,7 @@ import {
 } from '@tradetrust-tt/tradetrust-core'
 
 const providerOptions = {
-    // modify your provider accordingly
+    // modify your provider options accordingly
     network: 'sepolia',
     providerType: 'infura' as providerType,
     apiKey: 'your-api-key',
@@ -40,21 +34,30 @@ let document = {
     // tradetrust document
 } as any
 
-verify(document, { provider }).then((fragments) => {
+async function start() {
+    const fragments = await verify(document, { provider })
+
     // to check the overall validity of the document
     console.log(isValid(fragments))
-    const { hasValid, issuedValid, identityValid } =
-        interpretFragments(fragments)
+
     // to check if the document has not been modified, has been issued and has valid issuer identity
-    console.log({ hasValid, issuedValid, identityValid })
-})
+    const { hashValid, issuedValid, identityValid } =
+        interpretFragments(fragments)
+    console.log({ hashValid, issuedValid, identityValid })
+}
+
+start()
 ```
 
-## verify module
+## Methods
 
-It exports methods related to verificaton of the documents.
+tradetrust-core provides the following methods for document verification and validations.
 
-#### verify
+#### `generateProvider`
+
+It generates receives provider options and returns the ethereum JSON RPC provider to be used for [verify](#verify) method.
+
+#### `verify`
 
 It allows you to verify wrapped/ issued document programmatically. Upon successful verification, it will return fragments which would collectively prove the validity of the document.
 
@@ -62,7 +65,7 @@ Document can be either [verifiable document](https://docs.tradetrust.io/docs/tut
 
 For more information about building provider, visit [tt-verify repository](https://github.com/TradeTrust/tt-verify?tab=readme-ov-file#provider)
 
-#### isValid
+#### `isValid`
 
 It will execute over fragments, returned from [verify](#verify) method and determine if the fragments produced a valid result. The function will return true if a document fulfill the following conditions:
 
@@ -71,20 +74,7 @@ The document has been issued, and
 The document has not been revoked, and
 The issuer identity is valid.
 
-## utils/constants module
-
-It exposes the following constant values.
-
--   `networks` list of supported networks
--   `networkCurrency` list of supported currencies
--   `CHAIN_ID` mapping between supported network names and chain ids
--   `SUPPORTED_CHAINS` mapping between list of supported network names and their attributes.
-
-## utils/fragments module
-
-It exposes method to interact with verification fragments, returned by [verify](#verify) method
-
-#### interpretFragments
+#### `interpretFragments`
 
 It allows you to extract out the verified results from the fragments.
 
@@ -93,14 +83,6 @@ After verification, use `isValid` method to answer some questions:
 -   Has the document been tampered with ?
 -   Is the issuance state of the document valid ?
 -   Is the document issuer identity valid ? (see [identity proof](https://docs.tradetrust.io/docs/topics/verifying-documents/issuer-identity))
-
-## utils/providers module
-
-It contains method to generate provider.
-
-#### generateProvider
-
-It generates receives provider options and returns the ethereum JSON RPC provider to be used for [verify](#verify) method.
 
 ## Contributing
 
