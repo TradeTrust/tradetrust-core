@@ -19,7 +19,7 @@ jobs:
 
   release:
     name: Publish Release
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     needs: [tests, linters]
     steps:
       - uses: actions/checkout@v4
