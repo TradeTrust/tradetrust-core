@@ -108,7 +108,6 @@ describe('validateGaEvent', () => {
             label: undefined,
             value: undefined,
         })
-        expect(true).toBe(true)
     })
 
     it('passes for all values', () => {
@@ -118,7 +117,6 @@ describe('validateGaEvent', () => {
             label: 'Start Foobar',
             value: 2,
         })
-        expect(true).toBe(true)
     })
 })
 
@@ -134,7 +132,6 @@ describe('gaEvent', () => {
 
     it('does not fail if gtag is not present', () => {
         gaEvent(mockGaEvent as any)
-        expect(true).toBe(true)
     })
 
     it('sends and log gtag event if window.gtag is present', () => {
