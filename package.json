@@ -109,7 +109,7 @@
   },
   "dependencies": {
     "@tradetrust-tt/tradetrust": "^6.9.0",
-    "@tradetrust-tt/tt-verify": "^8.7.0"
+    "@tradetrust-tt/tt-verify": "^8.9.2"
   },
   "publishConfig": {
     "access": "public"
@@ -124,6 +124,6 @@
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.17.2",
-    "fsevents": "2.x.x"
+    "fsevents": "*"
   }
 }
