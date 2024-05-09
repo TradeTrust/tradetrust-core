@@ -16,7 +16,7 @@ import {
     whenDocumentNotFound,
     whenServerError,
     whenUnhandledError,
-} from '../../test/fixtures/verify/fragments/verifier-response'
+} from '../../../test/fixtures/verify/fragments/verifier-response'
 
 describe('interpretFragments', () => {
     it('should interpret whenDocumentHashInvalidAndNotIssued correctly', () => {
