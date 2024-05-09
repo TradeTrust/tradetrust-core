@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "test:prep:blockchain": "ganache --wallet.mnemonic \"indicate swing place chair flight used hammer soon photo region volume shuffle\" -i 1337",
+    "test:prep:blockchain": "hardhat node",
     "test:prep:contracts": "node test/prep/setup-contracts.mjs",
     "test:prep": "run-s test:prep:contracts test",
     "test:concurrently": "concurrently -k -s first \"npm:test:prep:blockchain\" \"npm:test:prep\"",
@@ -82,6 +82,7 @@
   "license": "ISC",
   "devDependencies": {
     "@commitlint/config-conventional": "^16.0.0",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@tradetrust-tt/tradetrust-cli": "^2.17.1",
     "@types/gtag.js": "0.0.19",
     "@types/jsdom": "^21.1.6",
@@ -95,7 +96,7 @@
     "dotenv": "^16.4.5",
     "eslint": "^8.56.0",
     "ethers": "^5.7.2",
-    "ganache": "^7.9.2",
+    "hardhat": "^2.22.3",
     "jsdom": "^24.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.2.4",
@@ -123,7 +124,6 @@
     "node": "18.x"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.17.2",
-    "fsevents": "*"
+    "@rollup/rollup-linux-x64-gnu": "^4.17.2"
   }
 }
