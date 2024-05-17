@@ -45,6 +45,9 @@
       ],
       "verify": [
         "./dist/types/verify/index.d.ts"
+      ],
+      "tradetrust": [
+        "./dist/types/tradetrust/index.d.ts"
       ]
     }
   },
@@ -76,6 +79,10 @@
     "./verify": {
       "require": "./dist/cjs/verify/index.js",
       "import": "./dist/esm/verify/index.js"
+    },
+    "./tradetrust": {
+      "require": "./dist/cjs/tradetrust/index.js",
+      "import": "./dist/esm/tradetrust/index.js"
     }
   },
   "author": "tradetrust",
@@ -109,7 +116,7 @@
     "url": "https://github.com/TradeTrust/tradetrust-core.git"
   },
   "dependencies": {
-    "@tradetrust-tt/tradetrust": "^6.9.0",
+    "@tradetrust-tt/tradetrust": "^6.9.4",
     "@tradetrust-tt/tt-verify": "^8.9.2"
   },
   "publishConfig": {

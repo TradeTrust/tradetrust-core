@@ -57,6 +57,18 @@ tradetrust-core provides the following methods for document verification and val
 
 It generates receives provider options and returns the ethereum JSON RPC provider to be used for [verify](#verify) method.
 
+#### `wrapDocumentV2`
+
+It takes in a Tradetrust v2 document and returns the wrapped document.
+
+#### `wrapDocumentsV2`
+
+It takes in array of Tradetrust v2 documents and returns the wrapped documents.
+
+#### `signDocument`
+
+It takes a wrapped document, a wallet (public and private key pair) or an Ethers.js Signer. The method will sign the merkle root from the wrapped document, append the signature to the document and return it. Currently, it supports `Secp256k1VerificationKey2018` sign algorithm.
+
 #### `verify`
 
 It allows you to verify wrapped/ issued document programmatically. Upon successful verification, it will return fragments which would collectively prove the validity of the document.

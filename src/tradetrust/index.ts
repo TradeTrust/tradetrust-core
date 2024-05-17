@@ -1,0 +1,41 @@
+// Import everything except utils from @tradetrust-tt/tradetrust
+import {
+    SchemaId,
+    utils,
+    v2,
+    v3,
+    OpenAttestationDocument,
+    obfuscateDocument,
+    verifySignature,
+    signDocument,
+    SUPPORTED_SIGNING_ALGORITHM,
+    getData,
+    isSchemaValidationError,
+    wrapDocument as wrapDocumentV2,
+    WrappedDocument,
+    wrapDocuments as wrapDocumentsV2,
+    __unsafe__use__it__at__your__own__risks__wrapDocument as wrapDocumentV3,
+    __unsafe__use__it__at__your__own__risks__wrapDocuments as wrapDocumentsV3,
+    SignedWrappedDocument,
+} from '@tradetrust-tt/tradetrust'
+
+// Re-export everything
+export {
+    SchemaId,
+    utils,
+    v2,
+    v3,
+    OpenAttestationDocument,
+    obfuscateDocument,
+    verifySignature,
+    signDocument,
+    SUPPORTED_SIGNING_ALGORITHM,
+    getData,
+    isSchemaValidationError,
+    wrapDocumentV2,
+    wrapDocumentV3,
+    WrappedDocument,
+    wrapDocumentsV2,
+    wrapDocumentsV3,
+    SignedWrappedDocument,
+}
