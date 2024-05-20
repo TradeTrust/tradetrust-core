@@ -1,6 +1,7 @@
 // Import everything except utils from @tradetrust-tt/tradetrust
 import {
     SchemaId,
+    validateSchema,
     utils,
     v2,
     v3,
@@ -22,6 +23,7 @@ import {
 // Re-export everything
 export {
     SchemaId,
+    validateSchema,
     utils,
     v2,
     v3,
