@@ -65,6 +65,18 @@ It takes in a Tradetrust v2 document and returns the wrapped document.
 
 It takes in array of Tradetrust v2 documents and returns the wrapped documents.
 
+#### `obfuscateDocument`
+
+It removes a key-value pair from the document's data section, without causing the file hash to change. This can be used to generate a new document containing a subset of the original data, yet allow the recipient to proof the provenance of the document.
+
+#### `getData`
+
+It returns the original data stored in the document, in a readable format.
+
+#### `diagnose`
+
+Tool to find out why a document is not a valid open attestation file (wrapped or signed document)
+
 #### `signDocument`
 
 It takes a wrapped document, a wallet (public and private key pair) or an Ethers.js Signer. The method will sign the merkle root from the wrapped document, append the signature to the document and return it. Currently, it supports `Secp256k1VerificationKey2018` sign algorithm.
@@ -95,6 +107,12 @@ After verification, use `isValid` method to answer some questions:
 -   Has the document been tampered with ?
 -   Is the issuance state of the document valid ?
 -   Is the document issuer identity valid ? (see [identity proof](https://docs.tradetrust.io/docs/topics/verifying-documents/issuer-identity))
+
+#### `verifySignature`
+
+It checks that the signature of the document corresponds to the actual content in the document. In addition, it checks that the target hash (hash of the document content), is part of the set of documents wrapped in the batch using the proofs.
+
+Note that this method does not check against the blockchain or any registry if this document has been published. The merkle root of this document need to be checked against a publicly accessible document store (can be a smart contract on the blockchain).
 
 ## Contributing
 
