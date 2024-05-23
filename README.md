@@ -10,6 +10,42 @@ npm i @tradetrust-tt/tradetrust-core
 
 ## Basic Usage
 
+#### Wrapping and Signing of verifiable document
+
+This example provides how to sign tradetrust wrapped verifiable document, as well as a public/private key pair or an [Ethers.js Signer](https://docs.ethers.io/v5/api/signer/).
+Replace `<your_wallet_address>` and `<your_private_key>` with your actual wallet address and private key.
+
+```ts
+import {
+    wrapDocumentV2,
+    signDocument,
+    isSignedWrappedV2Document,
+    SUPPORTED_SIGNING_ALGORITHM,
+} from '@minhtetoo/tradetrust-core'
+
+const document = {
+    // raw v2 document with dns-did as identitify proof
+} as any
+
+async function start() {
+    const wrappedDocument = wrapDocumentV2(document)
+    const signedDocument = await signDocument(
+        wrappedDocument,
+        SUPPORTED_SIGNING_ALGORITHM.Secp256k1VerificationKey2018,
+        {
+            public: 'did:ethr:<your_wallet_address>#controller',
+            private: '<your_private_key>',
+        }
+    )
+    // check is the document has already wrapped and signed
+    console.log(isSignedWrappedV2Document(signedDocument))
+}
+
+start()
+```
+
+#### Verifying
+
 This example provides how to verify tradetrust document using your own provider configurations.
 
 ```ts
@@ -69,9 +105,9 @@ It takes in array of Tradetrust v2 documents and returns the wrapped documents.
 
 It removes a key-value pair from the document's data section, without causing the file hash to change. This can be used to generate a new document containing a subset of the original data, yet allow the recipient to proof the provenance of the document.
 
-#### `getData`
+#### `getDataV2`
 
-It returns the original data stored in the document, in a readable format.
+It returns the original data stored in the Tradetrust v2 document, in a readable format.
 
 #### `diagnose`
 
@@ -113,6 +149,22 @@ After verification, use `isValid` method to answer some questions:
 It checks that the signature of the document corresponds to the actual content in the document. In addition, it checks that the target hash (hash of the document content), is part of the set of documents wrapped in the batch using the proofs.
 
 Note that this method does not check against the blockchain or any registry if this document has been published. The merkle root of this document need to be checked against a publicly accessible document store (can be a smart contract on the blockchain).
+
+#### `isWrappedV2Document`
+
+type guard for wrapped v2 document
+
+#### `isSignedWrappedV2Document`
+
+type guard for signed v2 document
+
+#### `isWrappedV3Document`
+
+type guard for wrapped v3 document
+
+#### `isSignedWrappedV3Document`
+
+type guard for signed v3 document
 
 ## Contributing
 
