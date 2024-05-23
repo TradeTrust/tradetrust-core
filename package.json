@@ -46,11 +46,17 @@
       "utils/tradetrust": [
         "./dist/types/utils/tradetrust/index.d.ts"
       ],
+      "utils/token-registry": [
+        "./dist/types/utils/token-registry/index.d.ts"
+      ],
       "verify": [
         "./dist/types/verify/index.d.ts"
       ],
       "tradetrust": [
         "./dist/types/tradetrust/index.d.ts"
+      ],
+      "token-registry": [
+        "./dist/types/token-registry/index.d.ts"
       ]
     }
   },
@@ -83,6 +89,10 @@
       "require": "./dist/cjs/utils/tradetrust/index.js",
       "import": "./dist/esm/utils/tradetrust/index.js"
     },
+    "./utils/token-registry": {
+      "require": "./dist/cjs/utils/token-registry/index.js",
+      "import": "./dist/esm/utils/token-registry/index.js"
+    },
     "./verify": {
       "require": "./dist/cjs/verify/index.js",
       "import": "./dist/esm/verify/index.js"
@@ -90,6 +100,10 @@
     "./tradetrust": {
       "require": "./dist/cjs/tradetrust/index.js",
       "import": "./dist/esm/tradetrust/index.js"
+    },
+    "./token-registry": {
+      "require": "./dist/cjs/token-registry/index.js",
+      "import": "./dist/esm/token-registry/index.js"
     }
   },
   "author": "tradetrust",
@@ -124,6 +138,7 @@
   },
   "dependencies": {
     "@tradetrust-tt/tradetrust": "^6.9.5",
+    "@tradetrust-tt/token-registry": "^4.10.1",
     "@tradetrust-tt/tt-verify": "^8.9.2"
   },
   "publishConfig": {
