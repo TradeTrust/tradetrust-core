@@ -17,18 +17,20 @@ Replace `<your_wallet_address>` and `<your_private_key>` with your actual wallet
 
 ```ts
 import {
-    wrapDocumentV2,
+    wrapDocumentsV2,
     signDocument,
     isSignedWrappedV2Document,
     SUPPORTED_SIGNING_ALGORITHM,
-} from '@minhtetoo/tradetrust-core'
+} from '@tradetrust-tt/tradetrust-core'
 
 const document = {
     // raw v2 document with dns-did as identitify proof
 } as any
 
 async function start() {
-    const wrappedDocument = wrapDocumentV2(document)
+    const wrappedDocuments = wrapDocumentsV2([document])
+    const wrappedDocument = wrappedDocuments[0]
+
     const signedDocument = await signDocument(
         wrappedDocument,
         SUPPORTED_SIGNING_ALGORITHM.Secp256k1VerificationKey2018,
@@ -37,7 +39,7 @@ async function start() {
             private: '<your_private_key>',
         }
     )
-    // check is the document has already wrapped and signed
+    // check if the document has already wrapped and signed
     console.log(isSignedWrappedV2Document(signedDocument))
 }
 
@@ -93,13 +95,13 @@ tradetrust-core provides the following methods for document verification and val
 
 It generates receives provider options and returns the ethereum JSON RPC provider to be used for [verify](#verify) method.
 
-#### `wrapDocumentV2`
-
-It takes in a Tradetrust v2 document and returns the wrapped document.
-
 #### `wrapDocumentsV2`
 
 It takes in array of Tradetrust v2 documents and returns the wrapped documents.
+
+#### `wrapDocumentsV3`
+
+It takes in array of Tradetrust v3 documents and returns the wrapped documents.
 
 #### `obfuscateDocument`
 
