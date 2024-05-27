@@ -24,7 +24,7 @@ import {
 } from '@tradetrust-tt/tradetrust-core'
 
 const document = {
-    // raw v2 document with dns-did as identitify proof
+    // raw tradetrust v2 document with dns-did as identitify proof
 } as any
 
 async function start() {
@@ -48,7 +48,7 @@ start()
 
 #### Deploying token-registry
 
-This example provides how to deploy tradetrust standard token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). It requires less gas compared to [standalone deployment](#deploying-standalone-token-registry), as it uses deployer and implementation addresses for deployment. Currently, it supports the following networks.
+This example provides how to deploy tradetrust standard token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). It requires less gas compared to [standalone deployment](#deploying-standalone-token-registry), as it uses deployer and implementation addresses for deployment. Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. Currently, it supports the following networks.
 
 -   ethereum
 -   sepolia
@@ -64,71 +64,111 @@ import {
     encodeInitParams,
     getEventFromReceipt,
 } from '@tradetrust-tt/tradetrust-core'
-
-const unconnectedWallet = new Wallet('privateKey')
-const provider = ethers.getDefaultProvider('sepolia')
-const wallet = unconnectedWallet.connect(provider)
-const walletAddress = await wallet.getAddress()
-const chainId = await wallet.getChainId()
-
-const { TokenImplementation, Deployer } = TOKEN_REG_CONSTS.contractAddress
-
-const deployerContract = TDocDeployer__factory.connect(
-    Deployer[chainId],
-    wallet
-)
-
-const initParam = encodeInitParams({
-    name: 'DemoTokenRegistry',
-    symbol: 'DTR',
-    deployer: walletAddress,
-})
-
-const tx = await deployerContract.deploy(
-    TokenImplementation[chainId],
-    initParam
-)
-const receipt = await tx.wait()
-const registryAddress = getEventFromReceipt<DeploymentEvent>(
-    receipt,
-    deployerContract.interface.getEventTopic('Deployment')
-).args.deployed
-
-// Contract Address
-console.log(`Contract Address: ${registryAddress}`)
-```
-
-#### Deploying standalone token-registry
-
-This example provides how to deploy tradetrust standalone token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). It works on all the [supported networks](https://docs.tradetrust.io/docs/topics/introduction/supported-network/#tradetrust-supported-networks).
-
-```ts
-import { TradeTrustToken__factory } from '@tradetrust-tt/tradetrust-core'
+import { Wallet, ethers } from 'ethers'
 
 async function start() {
-    const tokenFactory = new TradeTrustToken__factory(wallet)
-    const tokenRegistry = await tokenFactory.deploy(
-        registryName,
-        registrySymbol,
-        factoryAddress
+    const unconnectedWallet = new Wallet('<your_private_key>')
+    const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
+    const wallet = unconnectedWallet.connect(provider)
+    const walletAddress = await wallet.getAddress()
+    const chainId = await wallet.getChainId()
+
+    const { TokenImplementation, Deployer } = TOKEN_REG_CONSTS.contractAddress
+
+    const deployerContract = TDocDeployer__factory.connect(
+        Deployer[chainId],
+        wallet
     )
-    const registryAddress = token.address
+
+    const initParam = encodeInitParams({
+        name: 'DemoTokenRegistry',
+        symbol: 'DTR',
+        deployer: walletAddress,
+    })
+
+    const tx = await deployerContract.deploy(
+        TokenImplementation[chainId],
+        initParam
+    )
+    const receipt = await tx.wait()
+    const registryAddress = getEventFromReceipt<DeploymentEvent>(
+        receipt,
+        deployerContract.interface.getEventTopic('Deployment')
+    ).args.deployed
+
+    // new token registry contract address
+    console.log(registryAddress)
 }
 start()
 ```
 
-#### Minting of Transferrable Record
+#### Deploying standalone token-registry
 
-This example provides how to mint the tradetrust token for [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/) using the existing token registry address.
+This example provides how to deploy tradetrust standalone token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. It works on all the [supported networks](https://docs.tradetrust.io/docs/topics/introduction/supported-network/#tradetrust-supported-networks).
+
+```ts
+import {
+    TradeTrustToken__factory,
+    TOKEN_REG_CONSTS,
+} from '@tradetrust-tt/tradetrust-core'
+import { Wallet, ethers } from 'ethers'
+
+async function start() {
+    const unconnectedWallet = new Wallet('<your_private_key>')
+    const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
+    const wallet = unconnectedWallet.connect(provider)
+    const tokenFactory = new TradeTrustToken__factory(wallet)
+    const CHAIN_ID = await wallet.getChainId()
+    // get the title escrow factory address for each network
+    const TitleEscrowFactory =
+        TOKEN_REG_CONSTS.contractAddress.TitleEscrowFactory[CHAIN_ID]
+    const tokenRegistry = await tokenFactory.deploy(
+        'DemoTokenRegistry',
+        'DTR',
+        TitleEscrowFactory
+    )
+    const registryAddress = tokenRegistry.address
+    // new standalone token registry contract address
+    console.log(registryAddress)
+}
+start()
+```
+
+#### Wrapping & Minting of Transferrable Record
+
+This example provides how to wrap the raw document and mint the tradetrust token for [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/) using the existing token registry address. Replace the place holders `<your_private_key>`, `<your_provider_url>`, `<token_registry_address>`, `<beneficiary_address>` and '<holder_address>' accordingly. After successfully minted, transaction hash will be displayed and the wrappedDocument should be successfully [verified](#verifying).
 
 ```ts
 import { TradeTrustToken__factory } from '@tradetrust-tt/tradetrust-core'
+import { Wallet, ethers } from 'ethers'
 
-const connectedRegistry = TradeTrustToken__factory.connect(
-    tokenRegistryAddress,
-    signer
-)
-await connectedRegistry.mint(beneficiaryAddress, holderAddress, tokenId)
+async function start() {
+    const document = {
+        // raw tradetrust v2 document with dns-txt as identitify proof
+    }
+    const wrappedDocuments = wrapDocumentsV2([document as any])
+    const wrappedDocument = wrappedDocuments[0]
+    const tokenId = wrappedDocument.signature.targetHash
+    const unconnectedWallet = new Wallet('<your_private_key>')
+    const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
+    const wallet = unconnectedWallet.connect(provider)
+
+    const connectedRegistry = TradeTrustToken__factory.connect(
+        '<token_registry_address>',
+        wallet
+    )
+    const transaction = await connectedRegistry.mint(
+        '<beneficiary_address>',
+        '<holder_address>',
+        tokenId'
+    )
+    console.log(`Waiting for transaction ${transaction.hash} to be completed`)
+    const receipt = await transaction.wait()
+    // transaction hash
+    console.log(receipt.transactionHash)
+}
+
+start()
 ```
 
 #### Manage ownership of tradetrust token
