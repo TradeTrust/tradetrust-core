@@ -61,6 +61,8 @@ import {
     TDocDeployer__factory,
     TOKEN_REG_CONSTS,
     DeploymentEvent,
+    encodeInitParams,
+    getEventFromReceipt,
 } from '@tradetrust-tt/tradetrust-core'
 
 const unconnectedWallet = new Wallet('privateKey')
@@ -76,7 +78,7 @@ const deployerContract = TDocDeployer__factory.connect(
     wallet
 )
 
-const initParam = TokenRegistryUtils.encodeInitParams({
+const initParam = encodeInitParams({
     name: 'DemoTokenRegistry',
     symbol: 'DTR',
     deployer: walletAddress,
@@ -87,7 +89,7 @@ const tx = await deployerContract.deploy(
     initParam
 )
 const receipt = await tx.wait()
-const registryAddress = TokenRegistryUtils.getEventFromReceipt<DeploymentEvent>(
+const registryAddress = getEventFromReceipt<DeploymentEvent>(
     receipt,
     deployerContract.interface.getEventTopic('Deployment')
 ).args.deployed
@@ -113,6 +115,66 @@ async function start() {
     const registryAddress = token.address
 }
 start()
+```
+
+#### Minting of Transferrable Record
+
+This example provides how to mint the tradetrust token for [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/) using the existing token registry address.
+
+```ts
+import { TradeTrustToken__factory } from '@tradetrust-tt/tradetrust-core'
+
+const connectedRegistry = TradeTrustToken__factory.connect(
+    tokenRegistryAddress,
+    signer
+)
+await connectedRegistry.mint(beneficiaryAddress, holderAddress, tokenId)
+```
+
+#### Manage ownership of tradetrust token
+
+This example demonstrates how to manage and represent the ownership of a TradeTrust token between a beneficiary and holder for [Title Transfer](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer), and eventually surrender the document. During [minting](#minting-of-transferrable-record), the [Token Registry](https://docs.tradetrust.io/docs/topics/appendix/glossary/#token-registry) will create and assign a [Title Escrow](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer/#title-escrow) as the owner of that token. The actual owners will use the Title Escrow contract to perform their ownership operations.
+
+```ts
+import { connectToTitleEscrow } from '@tradetrust-tt/tradetrust-core'
+
+const titleEscrow = await connectToTitleEscrow({ tokenId, address, wallet })
+```
+
+After getting the titleEscrow instance, we can call the following methods to change the ownership of the tradetrust token.
+
+```ts
+/*
+allow the holder of the transferable record to endorse the transfer to an approved owner and approved holder of the transferable record.
+*/
+const transaction = await titleEscrow.transferBeneficiary(
+    beneficiaryNomineeAddress
+)
+await transaction.wait()
+
+// allow the owner of a transferable record to change its holder.
+const transaction = await titleEscrow.transferHolder(newHolderAddress)
+await transaction.wait()
+
+/* change the owner and holder. It will fail if the provided holder and owner's addresses are the same as the current owner and current holder's addresses.
+ */
+
+const transaction = await titleEscrow.transferOwners(
+    beneficiaryNomineeAddress,
+    newHolderAddress
+)
+await transaction.wait()
+
+/* allow the owner of the transferable record to nominate a new owner of the transferable record. It will fail if you are not the owner of the transferable record.
+ */
+const transaction = await titleEscrow.nominate(beneficiaryNomineeAddress)
+await transaction.wait()
+
+/*
+allow the entity (who is both an owner and holder) to surrender it's transferable record to the token registry.
+*/
+const transaction = await titleEscrow.surrender()
+await transaction.wait()
 ```
 
 #### Verifying
@@ -221,6 +283,10 @@ It checks that the signature of the document corresponds to the actual content i
 
 Note that this method does not check against the blockchain or any registry if this document has been published. The merkle root of this document need to be checked against a publicly accessible document store (can be a smart contract on the blockchain).
 
+#### `connectToTitleEscrow`
+
+It accepts the tokenId and address of the token resgitry and returns the address of the [TitleEscrow](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer/#title-escrow) which is connected to that token registry.
+
 #### `isWrappedV2Document`
 
 type guard for wrapped v2 document
@@ -236,6 +302,14 @@ type guard for wrapped v3 document
 #### `isSignedWrappedV3Document`
 
 type guard for signed v3 document
+
+#### `getEventFromReceipt`
+
+extracts a specific event from a transaction receipt.
+
+#### `encodeInitParams`
+
+prepare the initialization parameters for deploying the [token-registry](#deploying-token-registry)
 
 ## Contributing
 
