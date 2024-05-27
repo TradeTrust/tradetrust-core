@@ -10,6 +10,44 @@ npm i @tradetrust-tt/tradetrust-core
 
 ## Basic Usage
 
+#### Wrapping and Signing of verifiable document
+
+This example provides how to sign tradetrust wrapped verifiable document, as well as a public/private key pair or an [Ethers.js Signer](https://docs.ethers.io/v5/api/signer/).
+Replace `<your_wallet_address>` and `<your_private_key>` with your actual wallet address and private key.
+
+```ts
+import {
+    wrapDocumentsV2,
+    signDocument,
+    isSignedWrappedV2Document,
+    SUPPORTED_SIGNING_ALGORITHM,
+} from '@tradetrust-tt/tradetrust-core'
+
+const document = {
+    // raw v2 document with dns-did as identitify proof
+} as any
+
+async function start() {
+    const wrappedDocuments = wrapDocumentsV2([document])
+    const wrappedDocument = wrappedDocuments[0]
+
+    const signedDocument = await signDocument(
+        wrappedDocument,
+        SUPPORTED_SIGNING_ALGORITHM.Secp256k1VerificationKey2018,
+        {
+            public: 'did:ethr:<your_wallet_address>#controller',
+            private: '<your_private_key>',
+        }
+    )
+    // check if the document has already wrapped and signed
+    console.log(isSignedWrappedV2Document(signedDocument))
+}
+
+start()
+```
+
+#### Verifying
+
 This example provides how to verify tradetrust document using your own provider configurations.
 
 ```ts
@@ -57,6 +95,30 @@ tradetrust-core provides the following methods for document verification and val
 
 It generates receives provider options and returns the ethereum JSON RPC provider to be used for [verify](#verify) method.
 
+#### `wrapDocumentsV2`
+
+It takes in array of Tradetrust v2 documents and returns the wrapped documents.
+
+#### `wrapDocumentsV3`
+
+It takes in array of Tradetrust v3 documents and returns the wrapped documents.
+
+#### `obfuscateDocument`
+
+It removes a key-value pair from the document's data section, without causing the file hash to change. This can be used to generate a new document containing a subset of the original data, yet allow the recipient to proof the provenance of the document.
+
+#### `getDataV2`
+
+It returns the original data stored in the Tradetrust v2 document, in a readable format.
+
+#### `diagnose`
+
+Tool to find out why a document is not a valid open attestation file (wrapped or signed document)
+
+#### `signDocument`
+
+It takes a wrapped document, a wallet (public and private key pair) or an Ethers.js Signer. The method will sign the merkle root from the wrapped document, append the signature to the document and return it. Currently, it supports `Secp256k1VerificationKey2018` sign algorithm.
+
 #### `verify`
 
 It allows you to verify wrapped/ issued document programmatically. Upon successful verification, it will return fragments which would collectively prove the validity of the document.
@@ -83,6 +145,28 @@ After verification, use `isValid` method to answer some questions:
 -   Has the document been tampered with ?
 -   Is the issuance state of the document valid ?
 -   Is the document issuer identity valid ? (see [identity proof](https://docs.tradetrust.io/docs/topics/verifying-documents/issuer-identity))
+
+#### `verifySignature`
+
+It checks that the signature of the document corresponds to the actual content in the document. In addition, it checks that the target hash (hash of the document content), is part of the set of documents wrapped in the batch using the proofs.
+
+Note that this method does not check against the blockchain or any registry if this document has been published. The merkle root of this document need to be checked against a publicly accessible document store (can be a smart contract on the blockchain).
+
+#### `isWrappedV2Document`
+
+type guard for wrapped v2 document
+
+#### `isSignedWrappedV2Document`
+
+type guard for signed v2 document
+
+#### `isWrappedV3Document`
+
+type guard for wrapped v3 document
+
+#### `isSignedWrappedV3Document`
+
+type guard for signed v3 document
 
 ## Contributing
 
