@@ -138,7 +138,7 @@
   },
   "dependencies": {
     "@tradetrust-tt/tradetrust": "^6.9.5",
-    "@tradetrust-tt/token-registry": "^4.10.1",
+    "@tradetrust-tt/token-registry": "^4.10.2",
     "@tradetrust-tt/tt-verify": "^8.9.2"
   },
   "publishConfig": {
