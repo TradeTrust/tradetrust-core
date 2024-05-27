@@ -46,6 +46,75 @@ async function start() {
 start()
 ```
 
+#### Deploying token-registry
+
+This example provides how to deploy tradetrust standard token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). It requires less gas compared to [standalone deployment](#deploying-standalone-token-registry), as it uses deployer and implementation addresses for deployment. Currently, it supports the following networks.
+
+-   ethereum
+-   sepolia
+-   polygon
+-   stabilitytestnet
+-   stability
+
+```ts
+import {
+    TDocDeployer__factory,
+    TOKEN_REG_CONSTS,
+    DeploymentEvent,
+} from '@tradetrust-tt/tradetrust-core'
+
+const unconnectedWallet = new Wallet('privateKey')
+const provider = ethers.getDefaultProvider('sepolia')
+const wallet = unconnectedWallet.connect(provider)
+const walletAddress = await wallet.getAddress()
+const chainId = await wallet.getChainId()
+
+const { TokenImplementation, Deployer } = TOKEN_REG_CONSTS.contractAddress
+
+const deployerContract = TDocDeployer__factory.connect(
+    Deployer[chainId],
+    wallet
+)
+
+const initParam = TokenRegistryUtils.encodeInitParams({
+    name: 'DemoTokenRegistry',
+    symbol: 'DTR',
+    deployer: walletAddress,
+})
+
+const tx = await deployerContract.deploy(
+    TokenImplementation[chainId],
+    initParam
+)
+const receipt = await tx.wait()
+const registryAddress = TokenRegistryUtils.getEventFromReceipt<DeploymentEvent>(
+    receipt,
+    deployerContract.interface.getEventTopic('Deployment')
+).args.deployed
+
+// Contract Address
+console.log(`Contract Address: ${registryAddress}`)
+```
+
+#### Deploying standalone token-registry
+
+This example provides how to deploy tradetrust standalone token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). It works on all the [supported networks](https://docs.tradetrust.io/docs/topics/introduction/supported-network/#tradetrust-supported-networks).
+
+```ts
+import { TradeTrustToken__factory } from '@tradetrust-tt/tradetrust-core'
+
+async function start() {
+    const tokenFactory = new TradeTrustToken__factory(wallet)
+    const tokenRegistry = await tokenFactory.deploy(
+        registryName,
+        registrySymbol,
+        factoryAddress
+    )
+    const registryAddress = token.address
+}
+start()
+```
+
 #### Verifying
 
 This example provides how to verify tradetrust document using your own provider configurations.
