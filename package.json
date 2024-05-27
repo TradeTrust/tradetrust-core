@@ -28,26 +28,8 @@
       ".": [
         "./dist/types/index.d.ts"
       ],
-      "utils/constants": [
-        "./dist/types/utils/constants/index.d.ts"
-      ],
-      "utils/analytics": [
-        "./dist/types/utils/analytics/index.d.ts"
-      ],
-      "utils/fragement": [
-        "./dist/types/utils/fragement/index.d.ts"
-      ],
-      "utils/static": [
-        "./dist/types/utils/static/index.d.ts"
-      ],
-      "utils/provider": [
-        "./dist/types/utils/provider/index.d.ts"
-      ],
-      "utils/tradetrust": [
-        "./dist/types/utils/tradetrust/index.d.ts"
-      ],
-      "utils/token-registry": [
-        "./dist/types/utils/token-registry/index.d.ts"
+      "utils": [
+        "./dist/types/utils/index.d.ts"
       ],
       "verify": [
         "./dist/types/verify/index.d.ts"
@@ -65,33 +47,9 @@
       "require": "./dist/cjs/index.js",
       "import": "./dist/esm/index.js"
     },
-    "./utils/constants": {
-      "require": "./dist/cjs/utils/constants/index.js",
-      "import": "./dist/esm/utils/constants/index.js"
-    },
-    "./utils/analytics": {
-      "require": "./dist/cjs/utils/analytics/index.js",
-      "import": "./dist/esm/utils/analytics/index.js"
-    },
-    "./utils/fragement": {
-      "require": "./dist/cjs/utils/fragement/index.js",
-      "import": "./dist/esm/utils/fragement/index.js"
-    },
-    "./utils/static": {
-      "require": "./dist/cjs/utils/static/index.js",
-      "import": "./dist/esm/utils/static/index.js"
-    },
-    "./utils/provider": {
-      "require": "./dist/cjs/utils/provider/index.js",
-      "import": "./dist/esm/utils/provider/index.js"
-    },
-    "./utils/tradetrust": {
-      "require": "./dist/cjs/utils/tradetrust/index.js",
-      "import": "./dist/esm/utils/tradetrust/index.js"
-    },
-    "./utils/token-registry": {
-      "require": "./dist/cjs/utils/token-registry/index.js",
-      "import": "./dist/esm/utils/token-registry/index.js"
+    "./utils": {
+      "require": "./dist/cjs/utils/index.js",
+      "import": "./dist/esm/utils/index.js"
     },
     "./verify": {
       "require": "./dist/cjs/verify/index.js",
