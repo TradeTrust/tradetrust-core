@@ -9,17 +9,17 @@ import {
 
 export interface ConnectToTitleEscrowArgs {
     tokenId: string
-    address: string
+    tokenRegAddress: string
     wallet: Wallet | ConnectedSigner
 }
 
 export const connectToTitleEscrow = async ({
     tokenId,
-    address,
+    tokenRegAddress,
     wallet,
 }: ConnectToTitleEscrowArgs): Promise<TitleEscrow> => {
     const tokenRegistry: TradeTrustToken =
-        await TradeTrustToken__factory.connect(address, wallet)
+        await TradeTrustToken__factory.connect(tokenRegAddress, wallet)
     const titleEscrowAddress = await tokenRegistry.ownerOf(tokenId)
     return await TitleEscrow__factory.connect(titleEscrowAddress, wallet)
 }

@@ -8,7 +8,7 @@ Unified interface for interacting with TradeTrust's various services such as doc
 npm i @tradetrust-tt/tradetrust-core
 ```
 
-## Basic Usage
+## Basic Usages
 
 #### Wrapping and Signing of verifiable document
 
@@ -134,9 +134,9 @@ async function start() {
 start()
 ```
 
-#### Wrapping & Minting of Transferrable Record
+#### Wrapping and Minting of Transferrable Record
 
-This example provides how to wrap the raw document and mint the tradetrust token for [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/) using the existing token registry address. Replace the place holders `<your_private_key>`, `<your_provider_url>`, `<token_registry_address>`, `<beneficiary_address>` and '<holder_address>' accordingly. After successfully minted, transaction hash will be displayed and the wrappedDocument should be successfully [verified](#verifying).
+This example provides how to wrap the raw document and mint the tradetrust token for [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/) using the existing token registry address. Replace the place holders `<your_private_key>`, `<your_provider_url>`, `<token_registry_address>`, `<beneficiary_address>` and `<holder_address>` accordingly. After successfully minted, transaction hash will be displayed and the wrappedDocument should be successfully [verified](#verifying).
 
 ```ts
 import { TradeTrustToken__factory } from '@tradetrust-tt/tradetrust-core'
@@ -153,14 +153,14 @@ async function start() {
     const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
     const wallet = unconnectedWallet.connect(provider)
 
-    const connectedRegistry = TradeTrustToken__factory.connect(
+    const connectedTokenReg = TradeTrustToken__factory.connect(
         '<token_registry_address>',
         wallet
     )
-    const transaction = await connectedRegistry.mint(
+    const transaction = await connectedTokenReg.mint(
         '<beneficiary_address>',
         '<holder_address>',
-        tokenId'
+        tokenId
     )
     console.log(`Waiting for transaction ${transaction.hash} to be completed`)
     const receipt = await transaction.wait()
@@ -171,49 +171,99 @@ async function start() {
 start()
 ```
 
-#### Manage ownership of tradetrust token
+#### Manage Ownership of Transferable Record
 
-This example demonstrates how to manage and represent the ownership of a TradeTrust token between a beneficiary and holder for [Title Transfer](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer), and eventually surrender the document. During [minting](#minting-of-transferrable-record), the [Token Registry](https://docs.tradetrust.io/docs/topics/appendix/glossary/#token-registry) will create and assign a [Title Escrow](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer/#title-escrow) as the owner of that token. The actual owners will use the Title Escrow contract to perform their ownership operations.
+The examples in this section demonstrate how to manage and represent the ownership of a TradeTrust token between a beneficiary and holder for [Title Transfer](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer), and eventually surrender the document. During [minting](#minting-of-transferrable-record), the [Token Registry](https://docs.tradetrust.io/docs/topics/appendix/glossary/#token-registry) will create [Title Escrow](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer/#title-escrow) with initial owner and holder. In order to do the title transfer, we will need to connect to the titleEscrow first.
 
 ```ts
 import { connectToTitleEscrow } from '@tradetrust-tt/tradetrust-core'
+import { Wallet, ethers } from 'ethers'
 
-const titleEscrow = await connectToTitleEscrow({ tokenId, address, wallet })
+const unconnectedWallet = new Wallet('<your_private_key>')
+const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
+const wallet = unconnectedWallet.connect(provider)
+
+const tokenId = '<your_token_id>'
+const tokenRegAddress = '<your_token_registry_address>'
+const titleEscrow = await connectToTitleEscrow({
+    tokenRegAddress,
+    address,
+    wallet,
+})
 ```
 
-After getting the titleEscrow instance, we can call the following methods to change the ownership of the tradetrust token.
+After getting the titleEscrow, we can call the following methods to change the ownership of the tradetrust token.
+
+`nominate`
+
+Allow the owner of the transferable record to nominate a new owner. After nomination,
+the holder need to endorse with transferBeneficiary method.
 
 ```ts
-/*
-allow the holder of the transferable record to endorse the transfer to an approved owner and approved holder of the transferable record.
-*/
+const transaction = await titleEscrow.nominate(beneficiaryNomineeAddress)
+await transaction.wait()
+```
+
+`transferBeneficiary`
+
+Allow the holder of the transferable record to endorse the transfer to new owner who is being nominated by the current owner.
+If you are both the owner and holder, the change of ownership can happen without nomination.
+
+```ts
 const transaction = await titleEscrow.transferBeneficiary(
     beneficiaryNomineeAddress
 )
 await transaction.wait()
+```
 
-// allow the owner of a transferable record to change its holder.
+`transferHolder`
+
+Allow the holder of the transferable record to change its holder.
+
+```ts
 const transaction = await titleEscrow.transferHolder(newHolderAddress)
 await transaction.wait()
+```
 
-/* change the owner and holder. It will fail if the provided holder and owner's addresses are the same as the current owner and current holder's addresses.
- */
+`transferOwners`
 
+Allow the entity (who is both an owner and holder) to change to the new owner and holder of the document
+
+```ts
 const transaction = await titleEscrow.transferOwners(
     beneficiaryNomineeAddress,
     newHolderAddress
 )
 await transaction.wait()
+```
 
-/* allow the owner of the transferable record to nominate a new owner of the transferable record. It will fail if you are not the owner of the transferable record.
- */
-const transaction = await titleEscrow.nominate(beneficiaryNomineeAddress)
-await transaction.wait()
+`surrender`
 
-/*
-allow the entity (who is both an owner and holder) to surrender it's transferable record to the token registry.
-*/
+Allow the entity (who is both an owner and holder) to surrender it's transferable record to the issuer of the token registry at the end of it's life cycle.
+
+```ts
 const transaction = await titleEscrow.surrender()
+await transaction.wait()
+```
+
+After the the transferable record is surrendered by the owner, the issuer of the token registry need to accept or reject that surrender.
+Reference [here](#wrapping-and-minting-of-transferrable-record) on how to get the connected registry.
+
+`restore`
+
+Allow the issuer of the token registry to reject the surrender.
+
+```ts
+const transaction = await connectedTokenReg.restore(tokenId)
+await transaction.wait()
+```
+
+`burn`
+
+Allow the issuer of the token registry to accept the surrender and burn the document.
+
+```ts
+const transaction = await connectedTokenReg.burn(tokenId)
 await transaction.wait()
 ```
 
