@@ -3,7 +3,6 @@ export * from './fragement'
 export * from './analytics'
 export * from './constants/supportedChains'
 export * from './provider/provider'
-export * from './tradetrust'
 export * from './wallet'
 
 export { CONSTANTS }
