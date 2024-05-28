@@ -8,7 +8,7 @@ Unified interface for interacting with TradeTrust's various services such as doc
 npm i @tradetrust-tt/tradetrust-core
 ```
 
-## Basic Usage
+## Basic Usages
 
 #### Wrapping and Signing of verifiable document
 
@@ -24,7 +24,7 @@ import {
 } from '@tradetrust-tt/tradetrust-core'
 
 const document = {
-    // raw v2 document with dns-did as identitify proof
+    // raw tradetrust v2 document with dns-did as identitify proof
 } as any
 
 async function start() {
@@ -44,6 +44,227 @@ async function start() {
 }
 
 start()
+```
+
+#### Deploying token-registry
+
+This example provides how to deploy tradetrust standard token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). It requires less gas compared to [standalone deployment](#deploying-standalone-token-registry), as it uses deployer and implementation addresses for deployment. Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. Currently, it supports the following networks.
+
+-   ethereum
+-   sepolia
+-   polygon
+-   stabilitytestnet
+-   stability
+
+```ts
+import {
+    TDocDeployer__factory,
+    TOKEN_REG_CONSTS,
+    DeploymentEvent,
+    encodeInitParams,
+    getEventFromReceipt,
+} from '@tradetrust-tt/tradetrust-core'
+import { Wallet, ethers } from 'ethers'
+
+async function start() {
+    const unconnectedWallet = new Wallet('<your_private_key>')
+    const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
+    const wallet = unconnectedWallet.connect(provider)
+    const walletAddress = await wallet.getAddress()
+    const chainId = await wallet.getChainId()
+
+    const { TokenImplementation, Deployer } = TOKEN_REG_CONSTS.contractAddress
+
+    const deployerContract = TDocDeployer__factory.connect(
+        Deployer[chainId],
+        wallet
+    )
+
+    const initParam = encodeInitParams({
+        name: 'DemoTokenRegistry',
+        symbol: 'DTR',
+        deployer: walletAddress,
+    })
+
+    const tx = await deployerContract.deploy(
+        TokenImplementation[chainId],
+        initParam
+    )
+    const receipt = await tx.wait()
+    const registryAddress = getEventFromReceipt<DeploymentEvent>(
+        receipt,
+        deployerContract.interface.getEventTopic('Deployment')
+    ).args.deployed
+
+    // new token registry contract address
+    console.log(registryAddress)
+}
+start()
+```
+
+#### Deploying standalone token-registry
+
+This example provides how to deploy tradetrust standalone token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. It works on all the [supported networks](https://docs.tradetrust.io/docs/topics/introduction/supported-network/#tradetrust-supported-networks).
+
+```ts
+import {
+    TradeTrustToken__factory,
+    TOKEN_REG_CONSTS,
+} from '@tradetrust-tt/tradetrust-core'
+import { Wallet, ethers } from 'ethers'
+
+async function start() {
+    const unconnectedWallet = new Wallet('<your_private_key>')
+    const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
+    const wallet = unconnectedWallet.connect(provider)
+    const tokenFactory = new TradeTrustToken__factory(wallet)
+    const CHAIN_ID = await wallet.getChainId()
+    // get the title escrow factory address for each network
+    const TitleEscrowFactory =
+        TOKEN_REG_CONSTS.contractAddress.TitleEscrowFactory[CHAIN_ID]
+    const tokenRegistry = await tokenFactory.deploy(
+        'DemoTokenRegistry',
+        'DTR',
+        TitleEscrowFactory
+    )
+    const registryAddress = tokenRegistry.address
+    // new standalone token registry contract address
+    console.log(registryAddress)
+}
+start()
+```
+
+#### Wrapping and Minting of Transferrable Record
+
+This example provides how to wrap the raw document and mint the tradetrust token for [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/) using the existing token registry address. Replace the place holders `<your_private_key>`, `<your_provider_url>`, `<token_registry_address>`, `<beneficiary_address>` and `<holder_address>` accordingly. After successfully minted, transaction hash will be displayed and the wrappedDocument should be successfully [verified](#verifying).
+
+```ts
+import { TradeTrustToken__factory } from '@tradetrust-tt/tradetrust-core'
+import { Wallet, ethers } from 'ethers'
+
+async function start() {
+    const document = {
+        // raw tradetrust v2 document with dns-txt as identitify proof
+    }
+    const wrappedDocuments = wrapDocumentsV2([document as any])
+    const wrappedDocument = wrappedDocuments[0]
+    const tokenId = wrappedDocument.signature.targetHash
+    const unconnectedWallet = new Wallet('<your_private_key>')
+    const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
+    const wallet = unconnectedWallet.connect(provider)
+
+    const connectedTokenReg = TradeTrustToken__factory.connect(
+        '<token_registry_address>',
+        wallet
+    )
+    const transaction = await connectedTokenReg.mint(
+        '<beneficiary_address>',
+        '<holder_address>',
+        tokenId
+    )
+    console.log(`Waiting for transaction ${transaction.hash} to be completed`)
+    const receipt = await transaction.wait()
+    // transaction hash
+    console.log(receipt.transactionHash)
+}
+
+start()
+```
+
+#### Manage Ownership of Transferable Record
+
+The examples in this section demonstrate how to manage and represent the ownership of a TradeTrust token between a beneficiary and holder for [Title Transfer](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer), and eventually surrender the document. During [minting](#minting-of-transferrable-record), the [Token Registry](https://docs.tradetrust.io/docs/topics/appendix/glossary/#token-registry) will create [Title Escrow](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer/#title-escrow) with initial owner and holder. In order to do the title transfer, we will need to connect to the titleEscrow first.
+
+```ts
+import { connectToTitleEscrow } from '@tradetrust-tt/tradetrust-core'
+import { Wallet, ethers } from 'ethers'
+
+const unconnectedWallet = new Wallet('<your_private_key>')
+const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
+const wallet = unconnectedWallet.connect(provider)
+
+const tokenId = '<your_token_id>'
+const tokenRegAddress = '<your_token_registry_address>'
+const titleEscrow = await connectToTitleEscrow({
+    tokenRegAddress,
+    address,
+    wallet,
+})
+```
+
+After getting the titleEscrow, we can call the following methods to change the ownership of the tradetrust token.
+
+`nominate`
+
+Allow the owner of the transferable record to nominate a new owner. After nomination,
+the holder need to endorse with transferBeneficiary method.
+
+```ts
+const transaction = await titleEscrow.nominate(beneficiaryNomineeAddress)
+await transaction.wait()
+```
+
+`transferBeneficiary`
+
+Allow the holder of the transferable record to endorse the transfer to new owner who is being nominated by the current owner.
+If you are both the owner and holder, the change of ownership can happen without nomination.
+
+```ts
+const transaction = await titleEscrow.transferBeneficiary(
+    beneficiaryNomineeAddress
+)
+await transaction.wait()
+```
+
+`transferHolder`
+
+Allow the holder of the transferable record to change its holder.
+
+```ts
+const transaction = await titleEscrow.transferHolder(newHolderAddress)
+await transaction.wait()
+```
+
+`transferOwners`
+
+Allow the entity (who is both an owner and holder) to change to the new owner and holder of the document
+
+```ts
+const transaction = await titleEscrow.transferOwners(
+    beneficiaryNomineeAddress,
+    newHolderAddress
+)
+await transaction.wait()
+```
+
+`surrender`
+
+Allow the entity (who is both an owner and holder) to surrender it's transferable record to the issuer of the token registry at the end of it's life cycle.
+
+```ts
+const transaction = await titleEscrow.surrender()
+await transaction.wait()
+```
+
+After the the transferable record is surrendered by the owner, the issuer of the token registry need to accept or reject that surrender.
+Reference [here](#wrapping-and-minting-of-transferrable-record) on how to get the connected registry.
+
+`restore`
+
+Allow the issuer of the token registry to reject the surrender.
+
+```ts
+const transaction = await connectedTokenReg.restore(tokenId)
+await transaction.wait()
+```
+
+`burn`
+
+Allow the issuer of the token registry to accept the surrender and burn the document.
+
+```ts
+const transaction = await connectedTokenReg.burn(tokenId)
+await transaction.wait()
 ```
 
 #### Verifying
@@ -152,6 +373,10 @@ It checks that the signature of the document corresponds to the actual content i
 
 Note that this method does not check against the blockchain or any registry if this document has been published. The merkle root of this document need to be checked against a publicly accessible document store (can be a smart contract on the blockchain).
 
+#### `connectToTitleEscrow`
+
+It accepts the tokenId and address of the token resgitry and returns the address of the [TitleEscrow](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer/#title-escrow) which is connected to that token registry.
+
 #### `isWrappedV2Document`
 
 type guard for wrapped v2 document
@@ -167,6 +392,14 @@ type guard for wrapped v3 document
 #### `isSignedWrappedV3Document`
 
 type guard for signed v3 document
+
+#### `getEventFromReceipt`
+
+extracts a specific event from a transaction receipt.
+
+#### `encodeInitParams`
+
+prepare the initialization parameters for deploying the [token-registry](#deploying-token-registry)
 
 ## Contributing
 
