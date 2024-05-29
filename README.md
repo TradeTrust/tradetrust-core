@@ -10,9 +10,9 @@ npm i @tradetrust-tt/tradetrust-core
 
 ## Basic Usages
 
-#### Wrapping and Signing of verifiable document
+#### Wrapping and Signing of verifiable Document
 
-This example provides how to sign tradetrust wrapped verifiable document, as well as a public/private key pair or an [Ethers.js Signer](https://docs.ethers.io/v5/api/signer/).
+This example provides how to wrap and sign tradetrust verifiable document using public/private key pair. This method doesn't need user to have existing [document store](https://docs.tradetrust.io/docs/topics/introduction/verifiable-documents/document-store/) deployed on blockchain.
 Replace `<your_wallet_address>` and `<your_private_key>` with your actual wallet address and private key.
 
 ```ts
@@ -28,9 +28,11 @@ const document = {
 } as any
 
 async function start() {
+    // wrapping the raw v2 document
     const wrappedDocuments = wrapDocumentsV2([document])
     const wrappedDocument = wrappedDocuments[0]
 
+    // signing with public and private key
     const signedDocument = await signDocument(
         wrappedDocument,
         SUPPORTED_SIGNING_ALGORITHM.Secp256k1VerificationKey2018,
@@ -39,6 +41,9 @@ async function start() {
             private: '<your_private_key>',
         }
     )
+
+    // signed document
+    console.log(signedDocument)
     // check if the document has already wrapped and signed
     console.log(isSignedWrappedV2Document(signedDocument))
 }
@@ -46,7 +51,111 @@ async function start() {
 start()
 ```
 
-#### Deploying token-registry
+#### Deploying Document Store
+
+This example provides how to deploy trandetrust [document-store](https://docs.tradetrust.io/docs/topics/introduction/verifiable-documents/document-store/) to issue and revoke verifiable documents. Replace the values for `<your_private_key>` and `<your_provider_url>` accordingly.
+
+```ts
+import { DocumentStoreFactory } from '@tradetrust-tt/tradetrust-core'
+import { Wallet, ethers } from 'ethers'
+
+async function start() {
+    // preparing the wallet
+    const unconnectedWallet = new Wallet('<your_private_key>')
+    const provider = new ethers.providers.JsonRpcProvider(
+        '<your_placeholder_url>'
+    )
+    const wallet = unconnectedWallet.connect(provider)
+
+    // document store deployment
+    const docStoreFactory = new DocumentStoreFactory(wallet)
+    const ownerAddr = wallet.getAddress()
+    const transaction = await docStoreFactory.deploy('my doc store', ownerAddr)
+    const receipt = await transaction.deployTransaction.wait()
+
+    // new document store address
+    console.log(receipt.contractAddress)
+}
+
+start()
+```
+
+#### Wrapping, Issuing and Revoking of the Verifiable Document
+
+This example provides how to wrap the [raw verifiable document](https://docs.tradetrust.io/docs/tutorial/verifiable-documents/advanced/document-store/raw-document) and issue the tradetrust verifiable document using the existing [document store](https://docs.tradetrust.io/docs/topics/introduction/verifiable-documents/document-store/). After successfully issued, transaction hash will be displayed and the wrappedDocument should be successfully [verified](#verifying). Replace the placeholders `<your_private_key>`, `<your_provider_url>` and `<document_store_address>` accordingly.
+
+```ts
+import {
+    connectDocumentStore,
+    wrapDocumentsV2,
+} from '@tradetrust-tt/tradetrust-core'
+import { Wallet, ethers } from 'ethers'
+const document = {
+    // raw tradetrust verifiable v2 document with dns-txt as identity proof
+} as any
+
+async function start() {
+    // wrapping the raw v2 document
+    const wrappedDocuments = wrapDocumentsV2([document])
+    const wrappedDocument = wrappedDocuments[0]
+    const documentHash = wrappedDocument.signature.targetHash
+
+    // preparing the wallet
+    const unconnectedWallet = new Wallet('<your_private_key>')
+    const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
+    const wallet = unconnectedWallet.connect(provider)
+
+    // connect to existing document store
+    const docStoreAddr = '<document_store_address>'
+    const docStore = await connectDocumentStore(docStoreAddr, wallet)
+
+    // issue the document
+    const transaction = await docStore.issue(`0x${documentHash}`)
+    const receipt = await transaction.wait()
+
+    // transaction hash
+    console.log(receipt.transactionHash)
+    // issued document, which can be verified
+    console.log(console.log(JSON.stringify(wrappedDocument)))
+}
+
+start()
+```
+
+After the document is issued on document store, we can [revoke](https://docs.tradetrust.io/docs/tutorial/verifiable-documents/advanced/document-store/revoking-document/revoking-document-cli) the document. Replace the `<document_store_address>` with the address of the document store that the document is issued and the `<document_hash>` with the `targetHash` or `merkleRoot` of the document.
+
+```ts
+const docStore = await connectDocumentStore('<document_store_address>', wallet)
+const transaction = await docStore.revoke(`<document_hash>`)
+const receipt = await transaction.wait()
+// transaction hash
+console.log(receipt.transactionHash)
+```
+
+Document Store also provides a list of functions to get the state of document or manage ownership of the document store.
+
+```
+documentIssued
+documentRevoked
+isOwner
+name
+owner
+renounceOwnership
+transferOwnership
+version
+initialize
+issue
+bulkIssue
+getIssuedBlock
+isIssued
+isIssuedBefore
+revoke
+bulkRevoke
+isRevoked
+isRevokedBefore
+```
+
+#### Deploying Token Registry
 
 This example provides how to deploy tradetrust standard token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). It requires less gas compared to [standalone deployment](#deploying-standalone-token-registry), as it uses deployer and implementation addresses for deployment. Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. Currently, it supports the following networks.
 
@@ -67,25 +176,24 @@ import {
 import { Wallet, ethers } from 'ethers'
 
 async function start() {
+    // preparing the wallet
     const unconnectedWallet = new Wallet('<your_private_key>')
     const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
     const wallet = unconnectedWallet.connect(provider)
     const walletAddress = await wallet.getAddress()
     const chainId = await wallet.getChainId()
 
+    // deploy standard token registry
     const { TokenImplementation, Deployer } = TOKEN_REG_CONSTS.contractAddress
-
     const deployerContract = TDocDeployer__factory.connect(
         Deployer[chainId],
         wallet
     )
-
     const initParam = encodeInitParams({
         name: 'DemoTokenRegistry',
         symbol: 'DTR',
         deployer: walletAddress,
     })
-
     const tx = await deployerContract.deploy(
         TokenImplementation[chainId],
         initParam
@@ -102,7 +210,7 @@ async function start() {
 start()
 ```
 
-#### Deploying standalone token-registry
+#### Deploying Standalone Token Registry
 
 This example provides how to deploy tradetrust standalone token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. It works on all the [supported networks](https://docs.tradetrust.io/docs/topics/introduction/supported-network/#tradetrust-supported-networks).
 
@@ -136,7 +244,7 @@ start()
 
 #### Wrapping and Minting of Transferrable Record
 
-This example provides how to wrap the raw document and mint the tradetrust token for [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/) using the existing token registry address. Replace the place holders `<your_private_key>`, `<your_provider_url>`, `<token_registry_address>`, `<beneficiary_address>` and `<holder_address>` accordingly. After successfully minted, transaction hash will be displayed and the wrappedDocument should be successfully [verified](#verifying).
+This example provides how to wrap the [raw transferrable document](https://docs.tradetrust.io/docs/tutorial/transferable-records/raw-document) and mint the tradetrust token for [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/) using the existing token registry address. Replace the place holders `<your_private_key>`, `<your_provider_url>`, `<token_registry_address>`, `<beneficiary_address>` and `<holder_address>` accordingly. After successfully minted, transaction hash will be displayed and the wrappedDocument should be successfully [verified](#verifying).
 
 ```ts
 import { TradeTrustToken__factory } from '@tradetrust-tt/tradetrust-core'
@@ -144,19 +252,25 @@ import { Wallet, ethers } from 'ethers'
 
 async function start() {
     const document = {
-        // raw tradetrust v2 document with dns-txt as identitify proof
-    }
-    const wrappedDocuments = wrapDocumentsV2([document as any])
+        // raw tradetrust transferable v2 document with dns-txt as identitify proof
+    } as any
+
+    // wrapping tradetrust v2 document
+    const wrappedDocuments = wrapDocumentsV2([document])
     const wrappedDocument = wrappedDocuments[0]
     const tokenId = wrappedDocument.signature.targetHash
+
+    // preparing the wallet
     const unconnectedWallet = new Wallet('<your_private_key>')
     const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
     const wallet = unconnectedWallet.connect(provider)
 
+    // connect to the existing token registry
     const connectedTokenReg = TradeTrustToken__factory.connect(
         '<token_registry_address>',
         wallet
     )
+    // minting the document
     const transaction = await connectedTokenReg.mint(
         '<beneficiary_address>',
         '<holder_address>',
@@ -164,8 +278,11 @@ async function start() {
     )
     console.log(`Waiting for transaction ${transaction.hash} to be completed`)
     const receipt = await transaction.wait()
+
     // transaction hash
     console.log(receipt.transactionHash)
+    // minted document, which should be able to verified
+    console.log(wrappedDocument)
 }
 
 start()
@@ -400,6 +517,10 @@ extracts a specific event from a transaction receipt.
 #### `encodeInitParams`
 
 prepare the initialization parameters for deploying the [token-registry](#deploying-token-registry)
+
+#### `connectDocumentStore`
+
+connect to the existing document store
 
 ## Contributing
 
