@@ -288,7 +288,7 @@ async function start() {
 start()
 ```
 
-#### Manage Ownership of Transferable Record
+#### Managing the Ownership of Transferable Record
 
 The examples in this section demonstrate how to manage and represent the ownership of a TradeTrust token between a beneficiary and holder for [Title Transfer](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer), and eventually surrender the document. During [minting](#minting-of-transferrable-record), the [Token Registry](https://docs.tradetrust.io/docs/topics/appendix/glossary/#token-registry) will create [Title Escrow](https://docs.tradetrust.io/docs/topics/introduction/transferable-records/title-transfer/#title-escrow) with initial owner and holder. In order to do the title transfer, we will need to connect to the titleEscrow first.
 
@@ -383,6 +383,36 @@ Allow the issuer of the token registry to accept the surrender and burn the docu
 const transaction = await connectedTokenReg.burn(tokenId)
 await transaction.wait()
 ```
+
+#### Managing Role and Access for Token Registry
+
+Roles are useful for granting users to access certain functions only on existing token registry. A trusted user can be granted multiple roles by the admin user to perform different operations. This example provides how to use `grantRole` and `revokeRole` methods, which can be called on the existing token registry by the admin user to grant and revoke roles to and from users.
+Replace `<user_address>` with the actual address of the user.
+
+```ts
+import { TOKEN_REG_CONSTS } from '@tradetrust-tt/tradetrust-core'
+
+// granting minter role to specific user
+await tokenRegistry.grantRole(
+    TOKEN_REG_CONSTS.roleHash.MinterRole,
+    '<user_address>'
+)
+
+// revoking accepter role from specific user
+await tokenRegistry.revokeRole(
+    TOKEN_REG_CONSTS.roleHash.AccepterRole,
+    '<user_address>'
+)
+```
+
+Currently, here are the designated roles meant for the different key operations.
+
+| Role           | Access                              |
+| -------------- | ----------------------------------- |
+| `DefaultAdmin` | Able to perform all operations      |
+| `MinterRole`   | Able to mint new tokens             |
+| `AccepterRole` | Able to accept a surrendered token  |
+| `RestorerRole` | Able to restore a surrendered token |
 
 #### Verifying
 
