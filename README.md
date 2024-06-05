@@ -1,6 +1,6 @@
 # TradeTrust Core
 
-Unified interface for interacting with TradeTrust's various services such as document verification and validation of the fragments. This library contains a set of modules.
+Unified interface for interacting with TradeTrust's various services such as document verification and validation of the fragments.
 
 ## Installation
 
@@ -12,25 +12,24 @@ npm i @tradetrust-tt/tradetrust-core
 
 #### Wrapping and Signing of verifiable Document
 
-This example provides how to wrap and sign tradetrust verifiable document using public/private key pair. This method doesn't need user to have existing [document store](https://docs.tradetrust.io/docs/topics/introduction/verifiable-documents/document-store/) deployed on blockchain.
+This example provides how to wrap and sign TradeTrust verifiable document using public/private key pair. This method doesn't need user to have existing [document store](https://docs.tradetrust.io/docs/topics/introduction/verifiable-documents/document-store/) deployed on blockchain.
 Replace `<your_wallet_address>` and `<your_private_key>` with your actual wallet address and private key.
 
 ```ts
 import {
-    wrapDocumentsV2,
+    wrapDocumentV2,
     signDocument,
     isSignedWrappedV2Document,
     SUPPORTED_SIGNING_ALGORITHM,
 } from '@tradetrust-tt/tradetrust-core'
 
 const document = {
-    // raw tradetrust v2 document with dns-did as identitify proof
+    // raw TradeTrust v2 document with dns-did as identitify proof
 } as any
 
 async function start() {
     // wrapping the raw v2 document
-    const wrappedDocuments = wrapDocumentsV2([document])
-    const wrappedDocument = wrappedDocuments[0]
+    const wrappedDocument = wrapDocumentV2(document)
 
     // signing with public and private key
     const signedDocument = await signDocument(
@@ -82,22 +81,21 @@ start()
 
 #### Wrapping, Issuing and Revoking of the Verifiable Document
 
-This example provides how to wrap the [raw verifiable document](https://docs.tradetrust.io/docs/tutorial/verifiable-documents/advanced/document-store/raw-document) and issue the tradetrust verifiable document using the existing [document store](https://docs.tradetrust.io/docs/topics/introduction/verifiable-documents/document-store/). After successfully issued, transaction hash will be displayed and the wrappedDocument should be successfully [verified](#verifying). Replace the placeholders `<your_private_key>`, `<your_provider_url>` and `<document_store_address>` accordingly.
+This example provides how to wrap the [raw verifiable document](https://docs.tradetrust.io/docs/tutorial/verifiable-documents/advanced/document-store/raw-document) and issue the TradeTrust verifiable document using the existing [document store](https://docs.tradetrust.io/docs/topics/introduction/verifiable-documents/document-store/). After successfully issued, transaction hash will be displayed and the wrappedDocument should be successfully [verified](#verifying). Replace the placeholders `<your_private_key>`, `<your_provider_url>` and `<document_store_address>` accordingly.
 
 ```ts
 import {
     connectDocumentStore,
-    wrapDocumentsV2,
+    wrapDocumentV2,
 } from '@tradetrust-tt/tradetrust-core'
 import { Wallet, ethers } from 'ethers'
 const document = {
-    // raw tradetrust verifiable v2 document with dns-txt as identity proof
+    // raw TradeTrust verifiable v2 document with dns-txt as identity proof
 } as any
 
 async function start() {
     // wrapping the raw v2 document
-    const wrappedDocuments = wrapDocumentsV2([document])
-    const wrappedDocument = wrappedDocuments[0]
+    const wrappedDocument = wrapDocumentV2(document)
     const documentHash = wrappedDocument.signature.targetHash
 
     // preparing the wallet
@@ -157,7 +155,7 @@ isRevokedBefore
 
 #### Deploying Token Registry
 
-This example provides how to deploy tradetrust standard token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). It requires less gas compared to [standalone deployment](#deploying-standalone-token-registry), as it uses deployer and implementation addresses for deployment. Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. Currently, it supports the following networks.
+This example provides how to deploy TradeTrust standard token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). It requires less gas compared to [standalone deployment](#deploying-standalone-token-registry), as it uses deployer and implementation addresses for deployment. Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. Currently, it supports the following networks.
 
 -   ethereum
 -   sepolia
@@ -212,7 +210,7 @@ start()
 
 #### Deploying Standalone Token Registry
 
-This example provides how to deploy tradetrust standalone token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. It works on all the [supported networks](https://docs.tradetrust.io/docs/topics/introduction/supported-network/#tradetrust-supported-networks).
+This example provides how to deploy TradeTrust standalone token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. It works on all the [supported networks](https://docs.tradetrust.io/docs/topics/introduction/supported-network/#tradetrust-supported-networks).
 
 ```ts
 import {
@@ -244,20 +242,22 @@ start()
 
 #### Wrapping and Minting of Transferrable Record
 
-This example provides how to wrap the [raw transferrable document](https://docs.tradetrust.io/docs/tutorial/transferable-records/raw-document) and mint the tradetrust token for [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/) using the existing token registry address. Replace the place holders `<your_private_key>`, `<your_provider_url>`, `<token_registry_address>`, `<beneficiary_address>` and `<holder_address>` accordingly. After successfully minted, transaction hash will be displayed and the wrappedDocument should be successfully [verified](#verifying).
+This example provides how to wrap the [raw transferrable document](https://docs.tradetrust.io/docs/tutorial/transferable-records/raw-document) and mint the tradetrust token for [transferrable record](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/) using the existing token registry address. Replace the place holders `<your_private_key>`, `<your_provider_url>`, `<token_registry_address>`, `<beneficiary_address>` and `<holder_address>` accordingly. After successfully minted, transaction hash will be displayed and the `wrappedDocument` should be successfully [verified](#verifying).
 
 ```ts
-import { TradeTrustToken__factory } from '@tradetrust-tt/tradetrust-core'
+import {
+    TradeTrustToken__factory,
+    wrapDocumentV2,
+} from '@tradetrust-tt/tradetrust-core'
 import { Wallet, ethers } from 'ethers'
 
 async function start() {
     const document = {
-        // raw tradetrust transferable v2 document with dns-txt as identitify proof
+        // raw TradeTrust transferable v2 document with dns-txt as identitify proof
     } as any
 
     // wrapping tradetrust v2 document
-    const wrappedDocuments = wrapDocumentsV2([document])
-    const wrappedDocument = wrappedDocuments[0]
+    const wrappedDocument = wrapDocumentV2([document])
     const tokenId = wrappedDocument.signature.targetHash
 
     // preparing the wallet
@@ -463,13 +463,21 @@ tradetrust-core provides the following methods for document verification and val
 
 It generates receives provider options and returns the ethereum JSON RPC provider to be used for [verify](#verify) method.
 
+#### `wrapDocumentV2`
+
+It takes in TradeTrust v2 document and returns the wrapped document as an object.
+
 #### `wrapDocumentsV2`
 
-It takes in array of Tradetrust v2 documents and returns the wrapped documents.
+It takes in array of TradeTrust v2 documents and returns the wrapped documents.
+
+#### `wrapDocumentV3`
+
+It takes in TradeTrust v3 document and returns the wrapped document as an object.
 
 #### `wrapDocumentsV3`
 
-It takes in array of Tradetrust v3 documents and returns the wrapped documents.
+It takes in array of TradeTrust v3 documents and returns the wrapped documents.
 
 #### `obfuscateDocument`
 
@@ -477,7 +485,7 @@ It removes a key-value pair from the document's data section, without causing th
 
 #### `getDataV2`
 
-It returns the original data stored in the Tradetrust v2 document, in a readable format.
+It returns the original data stored in the TradeTrust v2 document, in a readable format.
 
 #### `diagnose`
 

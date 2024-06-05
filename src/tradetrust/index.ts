@@ -14,7 +14,9 @@ import {
     getData as getDataV2,
     isSchemaValidationError,
     wrapDocuments as wrapDocumentsV2,
+    wrapDocument as wrapDocumentV2,
     __unsafe__use__it__at__your__own__risks__wrapDocuments as wrapDocumentsV3,
+    __unsafe__use__it__at__your__own__risks__wrapDocument as wrapDocumentV3,
     utils,
 } from '@tradetrust-tt/tradetrust'
 
@@ -43,7 +45,9 @@ export {
     signDocument,
     getDataV2,
     isSchemaValidationError,
+    wrapDocumentV2,
     wrapDocumentsV2,
+    wrapDocumentV3,
     wrapDocumentsV3,
     v2,
     v3,
