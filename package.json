@@ -17,7 +17,7 @@
     "test:ci": "concurrently -k -s first \"npm:test:prep:blockchain\" \"npm:test:prep\"",
     "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:type",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
-    "build:esm": "tsc --module es2020 --outDir dist/esm",
+    "build:esm": "tsc --module es6 --outDir dist/esm",
     "build:type": "tsc -d --emitDeclarationOnly --outDir dist/types",
     "lint": "eslint ./src --ext .js,.ts",
     "lint-fix": "eslint ./src --ext .js,.ts --fix",
