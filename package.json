@@ -39,29 +39,42 @@
       ],
       "token-registry": [
         "./dist/types/token-registry/index.d.ts"
+      ],
+      "document-store": [
+        "./dist/types/document-store/index.d.ts"
       ]
     }
   },
   "exports": {
     ".": {
       "require": "./dist/cjs/index.js",
-      "import": "./dist/esm/index.js"
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./utils": {
       "require": "./dist/cjs/utils/index.js",
-      "import": "./dist/esm/utils/index.js"
+      "import": "./dist/esm/utils/index.js",
+      "types": "./dist/types/utils/index.d.ts"
     },
     "./verify": {
       "require": "./dist/cjs/verify/index.js",
-      "import": "./dist/esm/verify/index.js"
+      "import": "./dist/esm/verify/index.js",
+      "types": "./dist/types/verify/index.d.ts"
     },
     "./tradetrust": {
       "require": "./dist/cjs/tradetrust/index.js",
-      "import": "./dist/esm/tradetrust/index.js"
+      "import": "./dist/esm/tradetrust/index.js",
+      "types": "./dist/types/tradetrust/index.d.ts"
     },
     "./token-registry": {
       "require": "./dist/cjs/token-registry/index.js",
-      "import": "./dist/esm/token-registry/index.js"
+      "import": "./dist/esm/token-registry/index.js",
+      "types": "./dist/types/token-registry/index.d.ts"
+    },
+    "./document-store": {
+      "require": "./dist/cjs/document-store/index.js",
+      "import": "./dist/esm/document-store/index.js",
+      "types": "./dist/types/document-store/index.d.ts"
     }
   },
   "author": "tradetrust",
@@ -72,6 +85,7 @@
     "@tradetrust-tt/tradetrust-cli": "^2.17.1",
     "@types/gtag.js": "0.0.19",
     "@types/jsdom": "^21.1.6",
+    "@types/node-fetch": "^2.6.11",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vitest/browser": "^1.6.0",
@@ -79,7 +93,6 @@
     "commitizen": "^4.3.0",
     "concurrently": "^6.2.0",
     "cz-conventional-changelog": "^3.3.0",
-    "dotenv": "^16.4.5",
     "eslint": "^8.56.0",
     "ethers": "^5.7.2",
     "hardhat": "^2.22.3",
@@ -98,7 +111,9 @@
     "@tradetrust-tt/document-store": "^4.0.0",
     "@tradetrust-tt/token-registry": "^4.10.2",
     "@tradetrust-tt/tradetrust": "^6.9.5",
-    "@tradetrust-tt/tt-verify": "^8.9.2"
+    "@tradetrust-tt/tt-verify": "^8.9.2",
+    "dotenv": "^16.4.5",
+    "node-fetch": "^2.6.1"
   },
   "publishConfig": {
     "access": "public"
