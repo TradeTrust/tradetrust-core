@@ -10,6 +10,9 @@ npm i @tradetrust-tt/tradetrust-core
 
 ## Basic Usages
 
+> [!IMPORTANT]  
+> We strongly recommend to use [ethers-v5](https://docs.ethers.org/v5/) to interact with smart contracts for tradetrust-core, as it is already tested, and all the provided example usages are with ethers-v5 as well.
+
 #### Wrapping and Signing of verifiable Document
 
 This example provides how to wrap and sign TradeTrust verifiable document using public/private key pair. This method doesn't need user to have existing [document store](https://docs.tradetrust.io/docs/topics/introduction/verifiable-documents/document-store/) deployed on blockchain.
