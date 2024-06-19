@@ -563,6 +563,11 @@ prepare the initialization parameters for deploying the [token-registry](#deploy
 
 connect to the existing document store
 
+## Common Issues and Workaround
+
+-   [Transaction underpriced error on polygon mainnet](https://docs.tradetrust.io/docs/topics/appendix/polygon-mainnet-workaround/)
+-   [ZeroGasTransactions RPCs error on stability networks](https://docs.tradetrust.io/docs/topics/appendix/stability-gasfee-workaround/)
+
 ## Contributing
 
 We welcome contributions to the TradeTrust core library. Please feel free to submit a pull request or open an issue.
