@@ -1,10 +1,7 @@
 on:
   push:
     branches:
-      - master
       - main
-      - beta
-      - +([0-9])?(.{+([0-9]),x}).x
 
 env:
   NODE_ENV: ci
@@ -25,8 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [tests, linters]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - run: npm ci

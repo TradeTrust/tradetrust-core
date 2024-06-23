@@ -1,6 +1,6 @@
 {
   "name": "@tradetrust-tt/tradetrust-core",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -9,27 +9,124 @@
     "dist"
   ],
   "scripts": {
-    "test": "vitest --run",
-    "test:ci": "vitest --run --coverage",
+    "test:prep:blockchain": "hardhat node",
+    "test:prep:contracts": "node test/prep/setup-contracts.mjs",
+    "test:prep": "run-s test:prep:contracts test",
+    "test:concurrently": "concurrently -k -s first \"npm:test:prep:blockchain\" \"npm:test:prep\"",
+    "test": "npx vitest --run",
+    "test:ci": "concurrently -k -s first \"npm:test:prep:blockchain\" \"npm:test:prep\"",
     "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:type",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
-    "build:esm": "tsc --module es2015 --outDir dist/esm",
+    "build:esm": "tsc --module es6 --outDir dist/esm",
     "build:type": "tsc -d --emitDeclarationOnly --outDir dist/types",
     "lint": "eslint ./src --ext .js,.ts",
     "lint-fix": "eslint ./src --ext .js,.ts --fix",
     "clean": "rm -rf dist/"
   },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/types/index.d.ts"
+      ],
+      "utils": [
+        "./dist/types/utils/index.d.ts"
+      ],
+      "verify": [
+        "./dist/types/verify/index.d.ts"
+      ],
+      "tradetrust": [
+        "./dist/types/tradetrust/index.d.ts"
+      ],
+      "token-registry": [
+        "./dist/types/token-registry/index.d.ts"
+      ],
+      "document-store": [
+        "./dist/types/document-store/index.d.ts"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./utils": {
+      "require": "./dist/cjs/utils/index.js",
+      "import": "./dist/esm/utils/index.js",
+      "types": "./dist/types/utils/index.d.ts"
+    },
+    "./verify": {
+      "require": "./dist/cjs/verify/index.js",
+      "import": "./dist/esm/verify/index.js",
+      "types": "./dist/types/verify/index.d.ts"
+    },
+    "./tradetrust": {
+      "require": "./dist/cjs/tradetrust/index.js",
+      "import": "./dist/esm/tradetrust/index.js",
+      "types": "./dist/types/tradetrust/index.d.ts"
+    },
+    "./token-registry": {
+      "require": "./dist/cjs/token-registry/index.js",
+      "import": "./dist/esm/token-registry/index.js",
+      "types": "./dist/types/token-registry/index.d.ts"
+    },
+    "./document-store": {
+      "require": "./dist/cjs/document-store/index.js",
+      "import": "./dist/esm/document-store/index.js",
+      "types": "./dist/types/document-store/index.d.ts"
+    }
+  },
   "author": "tradetrust",
   "license": "ISC",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.20.0",
-    "@typescript-eslint/parser": "^6.20.0",
+    "@commitlint/config-conventional": "^16.0.0",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@tradetrust-tt/tradetrust-cli": "^2.17.1",
+    "@types/gtag.js": "0.0.19",
+    "@types/jsdom": "^21.1.6",
+    "@types/node-fetch": "^2.6.11",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitest/browser": "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "commitizen": "^4.3.0",
+    "concurrently": "^6.2.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.56.0",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.22.3",
+    "jsdom": "^24.0.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^3.2.4",
+    "shelljs": "^0.8.5",
     "typescript": "^5.3.3",
-    "vitest": "^1.2.2"
+    "vitest": "^1.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TradeTrust/tradetrust-core.git"
   },
   "dependencies": {
-    "@vitest/coverage-v8": "^1.2.2"
+    "@tradetrust-tt/document-store": "^4.0.0",
+    "@tradetrust-tt/token-registry": "^4.10.2",
+    "@tradetrust-tt/tradetrust": "^6.9.5",
+    "@tradetrust-tt/tt-verify": "^8.9.2",
+    "dotenv": "^16.4.5",
+    "node-fetch": "^2.6.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.17.2"
   }
 }
