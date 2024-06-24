@@ -419,7 +419,7 @@ Currently, here are the designated roles meant for the different key operations.
 
 #### Verifying
 
-This example provides how to verify tradetrust document using your own provider configurations.
+This example provides how to verify tradetrust document using your own provider. This process doesn't require wallet information. Replace the value of `<your_provider_url>` accordingly.
 
 ```ts
 import {
@@ -430,14 +430,8 @@ import {
     providerType,
 } from '@tradetrust-tt/tradetrust-core'
 
-const providerOptions = {
-    // modify your provider options accordingly
-    network: 'sepolia',
-    providerType: 'infura' as providerType,
-    apiKey: 'your-api-key',
-}
-// create provider object
-const provider = generateProvider(providerOptions)
+// create your provider
+const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
 
 let document = {
     // tradetrust document
