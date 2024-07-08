@@ -158,7 +158,7 @@ isRevokedBefore
 
 #### Deploying Token Registry
 
-This example provides how to deploy TradeTrust standard token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). It requires less gas compared to [standalone deployment](#deploying-standalone-token-registry), as it uses deployer and implementation addresses for deployment. Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. Currently, it supports the following networks.
+This example provides how to deploy TradeTrust token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. Currently, it supports the following networks.
 
 -   ethereum
 -   sepolia
@@ -206,38 +206,6 @@ async function start() {
     ).args.deployed
 
     // new token registry contract address
-    console.log(registryAddress)
-}
-start()
-```
-
-#### Deploying Standalone Token Registry
-
-This example provides how to deploy TradeTrust standalone token-registry for [transferrable records](https://docs.tradetrust.io/docs/tutorial/transferable-records/overview/). Replace the values for `<your_private_key>` and `<your_provider_url>` with your wallet private key and the JSON RPC url for desired network accordingly. It works on all the [supported networks](https://docs.tradetrust.io/docs/topics/introduction/supported-network/#tradetrust-supported-networks).
-
-```ts
-import {
-    TradeTrustToken__factory,
-    TOKEN_REG_CONSTS,
-} from '@tradetrust-tt/tradetrust-core'
-import { Wallet, ethers } from 'ethers'
-
-async function start() {
-    const unconnectedWallet = new Wallet('<your_private_key>')
-    const provider = new ethers.providers.JsonRpcProvider('<your_provider_url>')
-    const wallet = unconnectedWallet.connect(provider)
-    const tokenFactory = new TradeTrustToken__factory(wallet)
-    const CHAIN_ID = await wallet.getChainId()
-    // get the title escrow factory address for each network
-    const TitleEscrowFactory =
-        TOKEN_REG_CONSTS.contractAddress.TitleEscrowFactory[CHAIN_ID]
-    const tokenRegistry = await tokenFactory.deploy(
-        'DemoTokenRegistry',
-        'DTR',
-        TitleEscrowFactory
-    )
-    const registryAddress = tokenRegistry.address
-    // new standalone token registry contract address
     console.log(registryAddress)
 }
 start()
