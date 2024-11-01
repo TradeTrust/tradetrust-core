@@ -109,9 +109,9 @@
   },
   "dependencies": {
     "@tradetrust-tt/document-store": "^4.0.0",
-    "@tradetrust-tt/token-registry": "^4.10.2",
+    "@tradetrust-tt/token-registry": "^4.12.0",
     "@tradetrust-tt/tradetrust": "^6.9.5",
-    "@tradetrust-tt/tt-verify": "^8.9.4",
+    "@tradetrust-tt/tt-verify": "^8.10.0",
     "dotenv": "^16.4.5",
     "node-fetch": "^2.6.1"
   },

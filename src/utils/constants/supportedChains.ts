@@ -5,6 +5,7 @@ import {
     iconPolygon,
     iconStability,
     iconXDC,
+    iconAstron,
 } from '../static/icons'
 import 'dotenv/config'
 
@@ -20,6 +21,7 @@ export enum CHAIN_ID {
     hederamainnet = '295',
     stabilitytestnet = '20180427',
     stability = '101010',
+    astron = '1338',
 }
 
 export type chainInfo = {
@@ -195,6 +197,21 @@ export const SUPPORTED_CHAINS: supportedChains = {
         nativeCurrency: {
             name: 'FREE',
             symbol: 'FREE',
+            decimals: 18,
+        },
+    },
+    [CHAIN_ID.astron]: {
+        id: CHAIN_ID.astron,
+        label: 'Astron Network',
+        name: 'astron',
+        type: 'production',
+        currency: 'ASTRON',
+        iconImage: iconAstron,
+        explorerUrl: 'http://astronscanl2.bitfactory.cn/',
+        rpcUrl: `http://astronlayer2.bitfactory.cn:8545/`,
+        nativeCurrency: {
+            name: 'ASTRON',
+            symbol: 'ASTRON',
             decimals: 18,
         },
     },
