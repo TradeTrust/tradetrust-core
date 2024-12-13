@@ -1,5 +1,10 @@
 # TradeTrust Core
 
+> [!IMPORTANT]
+> This package has been depreciated. Use https://github.com/trustvc/trustvc instead.
+>
+> `npm i @trustvc/trustvc`
+
 Unified interface for interacting with TradeTrust's various services such as document verification and validation of the fragments.
 
 ## Installation
